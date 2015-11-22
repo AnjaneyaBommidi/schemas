@@ -1,0 +1,44 @@
+{
+  "name": "postman-collection",
+  "version": "2.0.0-draft.3",
+  "private": true,
+  "description": "Parses and validates Postman Collection files",
+  "keywords": [
+    "postman",
+    "api",
+    "rest",
+    "schema",
+    "collection"
+  ],
+  "license": "Apache",
+  "author": "Postman Labs <help@getpostman.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/postmanlabs/schemas.git"
+  },
+  "main": "lib/index.js",
+  "bin": {
+    "postman-collection": "./bin/postman-collection.js"
+  },
+  "engines": {
+    "npm": ">=3.0",
+    "node": ">=4.0"
+  },
+  "scripts": {
+    "start": "",
+    "test": "npm run bundle && npm run validate && npm run samples",
+    "bundle": "cd yaml && node ../bin/postman-collection.js bundle --no-validate --out ../json **/index.yaml",
+    "validate": "z-schema json/collection/v2.0.0-draft.3/index.json --pedanticCheck --forceAdditional --forceItems --forceMinItems --forceMinLength --forceProperties --noExtraKeywords --noTypeless --strictUris",
+    "samples": "bin/postman-collection.js validate json/collection/v2.0.0-draft.3/samples/**/index.*"
+  },
+  "dependencies": {
+    "call-me-maybe": "^1.0.1",
+    "commander": "^2.9.0",
+    "es6-promise": "^3.0.2",
+    "globby": "^4.0.0",
+    "json-schema-ref-parser": "^1.4.0",
+    "mkdirp": "^0.5.1",
+    "ono": "^1.0.22",
+    "z-schema": "^3.16.0"
+  }
+}

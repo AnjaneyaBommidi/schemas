@@ -1,0 +1,21 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Coverage
+coverage
+lib-cov
+
+# Build tools
+.grunt
+.tmp
+.idea
+
+# Dependencies
+node_modules

@@ -1,0 +1,13 @@
+title: XXXXXXXXXXX
+description: XXXXXXXXXXX
+type: object
+required:
+  - XXXXXXXXXXX
+  - XXXXXXXXXXX
+properties:
+  XXXXXXXXXXX:
+    type: XXXXXXXXXXX
+patternProperties:
+  ^_\w+:
+    $ref: user-defined.yaml
+additionalProperties: false

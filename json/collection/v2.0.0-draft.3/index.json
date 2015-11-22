@@ -1,0 +1,138 @@
+{
+  "id": "http://schema.getpostman.com/json/collection/v2.0.0-draft.2/",
+  "title": "Postman Collection Format v2.0",
+  "type": "object",
+  "required": [
+    "info"
+  ],
+  "properties": {
+    "info": {
+      "$ref": "#/definitions/Info"
+    }
+  },
+  "patternProperties": {
+    "^_\\w+": {
+      "$ref": "#/definitions/UserDefined"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Info": {
+      "title": "Information",
+      "description": "Top-level information about the Postman Collection",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "title": "Name of the collection",
+          "description": "A collection's friendly name is defined by this field. You would want to set this field to a value that would allow you to easily identify this collection among a bunch of other collections, as such outlining its usage or content.\n"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "title": "Description of the collection",
+          "description": "Provide a long description of this collection using this field. This field supports markdown syntax to better format the description.\n"
+        },
+        "version": {
+          "title": "Version",
+          "description": "A version number, either as a string or as an object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Info/properties/version/definitions/VersionString"
+            },
+            {
+              "$ref": "#/definitions/Info/properties/version/definitions/VersionObject"
+            }
+          ],
+          "definitions": {
+            "VersionString": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\d+(\\.\\d+){0,2}(-.*)",
+              "description": "A Semantic Versioniing (http://semver.org/) string"
+            },
+            "VersionObject": {
+              "type": "object",
+              "required": [
+                "major"
+              ],
+              "description": "Postman allows you to version your collections as they grow, and this field holds the version number. While optional, it is recommended that you use this field to its fullest extent!\n",
+              "additionalProperties": false,
+              "properties": {
+                "major": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Increment this number if you make changes to the collection that changes its behaviour. E.g: Removing or adding new test scripts. (partly or completely).\n"
+                },
+                "minor": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0,
+                  "description": "You should increment this number if you make changes that will not break anything that uses the collection. E.g: removing a folder.\n"
+                },
+                "patch": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0,
+                  "description": "Ideally, minor changes to a collection should result in the increment of this number.\n"
+                },
+                "identifier": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 10,
+                  "description": "A human friendly ideantifier to make sense of the version numbers. E.g: 'beta-3'\n"
+                }
+              },
+              "patternProperties": {
+                "^_\\w+": {
+                  "$ref": "#/definitions/UserDefined"
+                }
+              }
+            }
+          }
+        },
+        "_postman_compat_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Every collection is identified by the unique value of this field. The value of this field is usually easiest to generate using a UID generator function. If you already have a collection, it is recommended that you maintain the same id since changing the id usually implies that is a different collection than it was originally.\n\n *Note: This field exists for compatibility reasons with Collection Format V1.*\n"
+        }
+      },
+      "patternProperties": {
+        "^_\\w+": {
+          "$ref": "#/definitions/UserDefined"
+        }
+      },
+      "additionalProperties": false
+    },
+    "UserDefined": {
+      "title": "User-Defined",
+      "description": "Users can add custom properties to any object in a Collection, as long as the property name begins with an underscore.\nNOTE: Properties beginning with _postman are reserved for Postman's use\n",
+      "type": [
+        "array",
+        "boolean",
+        "integer",
+        "number",
+        "null",
+        "object",
+        "string"
+      ],
+      "minimum": 5e-324,
+      "minLength": 0,
+      "additionalProperties": true,
+      "patternProperties": {
+        ".*": {
+          "$ref": "#/definitions/UserDefined"
+        }
+      },
+      "items": {
+        "$ref": "#/definitions/UserDefined"
+      },
+      "minItems": 0,
+      "additionalItems": true
+    }
+  }
+}

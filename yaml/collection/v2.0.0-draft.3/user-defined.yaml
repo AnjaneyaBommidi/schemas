@@ -1,0 +1,34 @@
+title: User-Defined
+description: >
+  Users can add custom properties to any object in a Collection, as long as the property name begins
+  with an underscore.
+
+  NOTE: Properties beginning with _postman are reserved for Postman's use
+
+# Cam be any of the seven primitive types defined by JSON Schema
+type:
+  - "array"
+  - "boolean"
+  - "integer"
+  - "number"
+  - "null"
+  - "object"
+  - "string"
+
+# for numbers
+minimum: 5.e-324
+
+# for strings
+minLength: 0
+
+# for objects
+additionalProperties: true
+patternProperties:
+  .*:
+    $ref: user-defined.yaml
+
+# for arrays
+items:
+  $ref: user-defined.yaml
+minItems: 0
+additionalItems: true

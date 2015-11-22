@@ -15,7 +15,7 @@
                 },
                 "_postman_compat_id": {
                     "type": "string",
-                    "description": "Every collection is identified by the unique value of this field. The value of this field is usually easiest to generate using a UID generator function. If you already have a collection, it is recommended that you maintain the same id since changing the id usually implies that is a different collection than it was originally.\n *Note: This field exists for compatibility reasons with Collection Format V1.*"
+                    "description": "Every collection is identified by the unique value of this field. The value of this field is usually easiest to generate using a UID generator function. If you already have a collection, it is recommended that you maintain the same id since changing the id usually implies that is a different collection than it was originally.\n\n *Note: This field exists for compatibility reasons with Collection Format\nV1.*"
                 },
                 "description": {
                     "type": "string",
@@ -195,11 +195,11 @@
                                                     },
                                                     "accessKey": {
                                                         "type": "string",
-                                                        "description": "AWS Signature V4 calculation requires the AWS Access Key of the AWS IAM user being used. This key is stored in this field.\n *Note: Do not use your AWS root credentials here.*"
+                                                        "description": "AWS Signature V4 calculation requires the AWS Access Key of the AWS IAM user being used. This key is stored in this field.\n\n *Note: Do not use your AWS root credentials here.*"
                                                     },
                                                     "secretKey": {
                                                         "type": "string",
-                                                        "description": "The AWS Secret key associated with the Access Key is stored in this field.\n *Note: Do not use your AWS root credentials here.*"
+                                                        "description": "The AWS Secret key associated with the Access Key is stored in this field.\n\n *Note: Do not use your AWS root credentials here.*"
                                                     },
                                                     "region": {
                                                         "type": "string",
@@ -635,11 +635,11 @@
                                                                 },
                                                                 "accessKey": {
                                                                     "type": "string",
-                                                                    "description": "AWS Signature V4 calculation requires the AWS Access Key of the AWS IAM user being used. This key is stored in this field.\n *Note: Do not use your AWS root credentials here.*"
+                                                                    "description": "AWS Signature V4 calculation requires the AWS Access Key of the AWS IAM user being used. This key is stored in this field.\n\n *Note: Do not use your AWS root credentials\nhere.*"
                                                                 },
                                                                 "secretKey": {
                                                                     "type": "string",
-                                                                    "description": "The AWS Secret key associated with the Access Key is stored in this field.\n *Note: Do not use your AWS root credentials here.*"
+                                                                    "description": "The AWS Secret key associated with the Access Key is stored in this field.\n\n *Note: Do not use your AWS root credentials\nhere.*"
                                                                 },
                                                                 "region": {
                                                                     "type": "string",
@@ -1267,11 +1267,11 @@
                                                                         },
                                                                         "accessKey": {
                                                                             "type": "string",
-                                                                            "description": "AWS Signature V4 calculation requires the AWS Access Key of the AWS IAM user being used. This key is stored in this field.\n *Note: Do not use your AWS root credentials here.*"
+                                                                            "description": "AWS Signature V4 calculation requires the AWS Access Key of the AWS IAM user being used. This key is stored in this field.\n\n *Note: Do not use your AWS root credentials\nhere.*"
                                                                         },
                                                                         "secretKey": {
                                                                             "type": "string",
-                                                                            "description": "The AWS Secret key associated with the Access Key is stored in this field.\n *Note: Do not use your AWS root credentials here.*"
+                                                                            "description": "The AWS Secret key associated with the Access Key is stored in this field.\n\n *Note: Do not use your AWS root credentials\nhere.*"
                                                                         },
                                                                         "region": {
                                                                             "type": "string",
@@ -1707,11 +1707,11 @@
                                                                                     },
                                                                                     "accessKey": {
                                                                                         "type": "string",
-                                                                                        "description": "AWS Signature V4 calculation requires the AWS Access Key of the AWS IAM user being used. This key is stored in this field.\n *Note: Do not use your AWS root credentials here.*"
+                                                                                        "description": "AWS Signature V4 calculation requires the AWS Access Key of the AWS IAM user being used. This key is stored in this field.\n\n *Note: Do not use your AWS root\ncredentials here.*"
                                                                                     },
                                                                                     "secretKey": {
                                                                                         "type": "string",
-                                                                                        "description": "The AWS Secret key associated with the Access Key is stored in this field.\n *Note: Do not use your AWS root credentials here.*"
+                                                                                        "description": "The AWS Secret key associated with the Access Key is stored in this field.\n\n *Note: Do not use your AWS root\ncredentials here.*"
                                                                                     },
                                                                                     "region": {
                                                                                         "type": "string",

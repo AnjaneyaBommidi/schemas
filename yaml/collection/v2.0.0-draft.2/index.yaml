@@ -1,0 +1,16 @@
+$schema: 'http://json-schema.org/draft-04/schema#'
+id: 'http://schema.getpostman.com/json/collection/v2.0.0-draft.2/'
+type: object
+properties:
+  info:
+    $ref: info.yaml
+  items:
+    $ref: items.yaml
+  scripts:
+    $ref: scripts.yaml
+  variables:
+    $ref: variables.yaml
+required:
+  - info
+  - items
+

@@ -1,0 +1,38 @@
+title: Special Folder
+description: |-
+  The Postman Collection Format defines a few special top-level folders that have explicit purposes:
+
+  - examples:
+    This folder is for requests that are meant to be examples of how to use your API. They will usually
+    contain sample data, populated headers, and often even saved responses.  These requests usually
+    don't have any scripts.
+
+  - tests:
+    This folder is for requests that are meant to test specific functionality of your API.  This can
+    include end-to-end tests, smoke tests, uptime monitoring, etc.  It's very common for these tests
+    to contain scripts and use variables to store state between requests.  It's also very common for
+    this folder to contain many sub-folders for different test runs.  When using the Newman command-line
+    tool, you can choose to run a specific sub-folder within this folder.
+
+  - requests:
+    This is a catch-all folder for any type of request, or for requests that don't belong in one
+    of the other folders.  For example, this is a good place to save requests that you use frequently
+    during debugging or development of your API.
+
+type: object
+required:
+  - items
+properties:
+  description:
+    type: string
+    minLength: 0
+    description: >
+      A description of the folder. This field supports markdown syntax to better format the description.
+  items:
+    $ref: items.yaml
+    description: The contents of the folder. This can include HTTP requsts, as well as other folders.
+
+patternProperties:
+  "^_":
+    $ref: json-schema.yaml#/definitions/AnyType
+additionalProperties: false

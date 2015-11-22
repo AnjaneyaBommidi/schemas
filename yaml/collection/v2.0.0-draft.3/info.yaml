@@ -8,7 +8,7 @@ properties:
     type: string
     minLength: 1
     title: Name of the collection
-    description: >
+    description: >-
       A collection's friendly name is defined by this field.
       You would want to set this field to a value that would allow you to easily identify this
       collection among a bunch of other collections, as such outlining its usage or content.
@@ -16,23 +16,12 @@ properties:
     type: string
     minLength: 0
     title: Description of the collection
-    description: >
+    description: >-
       Provide a long description of this collection using this field.
       This field supports markdown syntax to better format the description.
   version:
     $ref: version.yaml
-  _postman_compat_id:
-    type: string
-    minLength: 1
-    description: >
-      Every collection is identified by the unique value of this field. The value
-      of this field is usually easiest to generate using a UID generator
-      function. If you already have a collection, it is recommended that you
-      maintain the same id since changing the id usually implies that is
-      a different collection than it was originally.
-
-       *Note: This field exists for compatibility reasons with Collection Format V1.*
 patternProperties:
-  ^_\w+:
-    $ref: user-defined.yaml
+  "^_":
+    $ref: json-schema.yaml#/definitions/AnyType
 additionalProperties: false

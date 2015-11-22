@@ -15,7 +15,7 @@ definitions:
     type: object
     required:
       - major
-    description: >
+    description: >-
       Postman allows you to version your collections as they grow, and this field holds the version number.
       While optional, it is recommended that you use this field to its fullest extent!
     additionalProperties: false
@@ -23,29 +23,29 @@ definitions:
       major:
         type: integer
         minimum: 0
-        description: >
+        description: >-
           Increment this number if you make changes to the collection that changes its behaviour.
           E.g: Removing or adding new test scripts. (partly or completely).
       minor:
         type: integer
         minimum: 0
         default: 0
-        description: >
+        description: >-
           You should increment this number if you make changes that will not break anything that
           uses the collection. E.g: removing a folder.
       patch:
         type: integer
         minimum: 0
         default: 0
-        description: >
+        description: >-
           Ideally, minor changes to a collection should result in the increment of this number.
       identifier:
         type: string
         minLength: 0
         maxLength: 10
-        description: >
+        description: >-
           A human friendly ideantifier to make sense of the version numbers. E.g: 'beta-3'
     patternProperties:
-      ^_\w+:
-        $ref: user-defined.yaml
+      "^_":
+        $ref: json-schema.yaml#/definitions/AnyType
     additionalProperties: false

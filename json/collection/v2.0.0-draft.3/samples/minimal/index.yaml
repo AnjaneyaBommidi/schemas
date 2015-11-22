@@ -1,2 +1,14 @@
+# Yes, this is a VERY empty collection.
+# The only thing that's actually required is the collection name.
+#
+# Collections fill different needs for different people, so which properties you choose to add to your
+# collection depends on its purpose.  If you just want to define your API schema, then set the "schema" property.
+# If you just want a place to store HTTP requests, then set the "requests" property.  If your using
+# the collection as a suite of tests to run via Newman, then set the "tests" property.
+#
+# Of course, you may also choose to use one collection for ALL of the above (plus more!), in which
+# case you will end up setting several different properties.  Postman and Newman are smart enough to
+# know which parts of the collection are for which purposes, so you don't need to worry about your
+# "examples" requests accidentally getting run as part of your test suite.
 info:
   name: My Collection

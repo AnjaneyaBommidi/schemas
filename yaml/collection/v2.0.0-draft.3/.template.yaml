@@ -8,6 +8,6 @@ properties:
   XXXXXXXXXXX:
     type: XXXXXXXXXXX
 patternProperties:
-  ^_\w+:
-    $ref: user-defined.yaml
+  "^_":
+    $ref: json-schema.yaml#/definitions/AnyType
 additionalProperties: false

@@ -1,0 +1,88 @@
+title: URL
+description: A URL, either as a string or as an object
+oneOf:
+  - $ref: "#/definitions/UrlString"
+  - $ref: "#/definitions/UrlObject"
+
+definitions:
+  UrlString:
+    type: string
+    minLength: 1
+    description: >
+      The URL string can contain variables using double curly brackets.
+      (e.g. `http://{{server}}:{{port_number}}/users/login`)
+
+  UrlObject:
+    type: object
+    description: >
+      The URL object has separate properties for each part of the URL.
+      The property names are the same as in Node.js and the HTML DOM (https://developer.mozilla.org/en-US/docs/Web/API/Location),
+      but some of the property types have been expanded from simple strings to more complex types
+      to allow for advanced features of Postman, such as variables.
+    required:
+      - protocol
+      - hostname
+    properties:
+      protocol:
+        type: string
+        minLength: 1
+        description: >
+          The URL protocol (e.g: "http"), or a variable name in double curly brackets (e.g. `{{my_protocol}}`)
+      hostname:
+        type: string
+        minLength: 1
+        description: >
+          The host name (e.g. "localhost", "microsoft.com", "www.amazon.com"), or a variable name in
+          double curly brackets (e.g. `{{server_name}}`)
+      port:
+        type:
+          - number
+          - string
+        minimum: 0
+        minLength: 0
+        description: >
+          The port number (e.g. 80, 443, 3000, etc.), or a variable name in double curly brackets (e.g. `{{port_number}}`).
+          If the port number is not specified, then it defaults to 80 for http, or 443 for https.
+      username:
+        type: string
+        minLength: 0
+        description: >
+          The username, or a variable name in double curly brackets (e.g. `{{user_name}}`)
+      password:
+        type: string
+        minLength: 0
+        description: >
+          The password, or a variable name in double curly brackets (e.g. `{{password}}`)
+      pathname:
+        type:
+          - string
+          - array
+        minLength: 0
+        minItems: 0
+        items:
+          type: string
+        description: >
+          The pathname portion of the url as a string (e.g. "/api/v1/users/login") or as an array of strings (e.g. ["api", "v1", "users", "login"]).
+          Either way, you can include variable names in double curly brackets
+          (e.g. `/api/{{version_number}}/users/login` or `["api", "{{version_number}}", "users", "login"]`).
+      query:
+        type: object
+        description: >
+          The query string parameters, as set of key/value pairsAn array of QueryParams, which is basically the query string part of the URL, parsed into separate variables'
+        items:
+          type: object
+          title: QueryParam
+          properties:
+            key:
+              type: string
+            value:
+              type: string
+            description:
+              type: string
+      fragment:
+        description: 'Contains the URL fragment (if any). Usually this is not transmitted over the network, but it could be useful to store this in some cases.'
+        type: string
+    patternProperties:
+      "^_":
+        $ref: json-schema.yaml#/definitions/AnyType
+    additionalProperties: false

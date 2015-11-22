@@ -25,11 +25,10 @@
     "node": ">=4.0"
   },
   "scripts": {
-    "start": "",
-    "test": "npm run bundle && npm run validate && npm run samples",
-    "bundle": "cd yaml && node ../bin/postman-collection.js bundle --no-validate --out ../json **/index.yaml",
-    "validate": "z-schema json/collection/v2.0.0-draft.3/index.json --pedanticCheck --forceAdditional --forceItems --forceMinItems --forceMinLength --forceProperties --noExtraKeywords --noTypeless --strictUris",
-    "samples": "bin/postman-collection.js validate json/collection/v2.0.0-draft.3/samples/**/index.*"
+    "start": "bin/postman-collection.js validate json/collection/v2.0.0-draft.3/samples/**/index.*",
+    "test": "npm run bundle && npm run validate && npm start",
+    "bundle": "cd yaml && node ../bin/postman-collection.js bundle --no-validate --out ../json collection/v2.0.0-draft.3/index.yaml",
+    "validate": "z-schema json/collection/v2.0.0-draft.3/index.json --pedanticCheck --forceAdditional --forceItems --forceMinItems --forceMinLength --forceProperties --noExtraKeywords --noTypeless --strictUris"
   },
   "dependencies": {
     "call-me-maybe": "^1.0.1",

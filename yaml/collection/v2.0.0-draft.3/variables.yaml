@@ -1,16 +1,25 @@
-description: 'Using variables in your Postman requests eliminates the need to duplicate requests, which can save a lot of time. Variables can be defined, and referenced to from any part of a request.'
-type: array
-items:
-  title: Variable
-  type: object
-  properties:
-    id:
-      description: 'A variable ID is a unique user-defined value that identifies the variable within a collection. In traditional terms, this would be a variable name.'
-      type: string
-    value:
-      description: 'The value that a variable holds in this collection. Ultimately, the variables will be replaced by this value, when say running a set of requests from a collection'
-      type: string
-    type:
-      description: A variable may have multiple types. This field specifies the type of the variable.
-      type: string
+title: Variables
+description: >-
+  Using variables in your Postman requests eliminates the need to duplicate requests,
+  which can save a lot of time. Variables can be referenced anywhere in a request.
 
+  Variables defined at the top-level of a collection can be overridden by variables defined at
+  lower levels of the collection, such as in an Endpoint or in a Request.
+
+  Collection Variables can be overridden by Environment Variables in Postman and Newman.
+
+type: object
+patternProperties:
+  # Each property name defines a variable of the same name.
+  # Variable names MUST begin with a letter, and can ONLY contain letters, numbers, and underscores.
+  # Variable names CANNOT contain spaces or special characters.
+  "^[a-zA-Z]\\w+$":
+    $ref: json-schema.yaml#/definitions/AnyType
+
+  # Any properties beginning with an underscore ARE NOT variables. They are Collection metadata.
+  # These properties can contain ANY characters, including spaces and special characters, as long
+  # as the first character is an underscore
+  "^_":
+    $ref: json-schema.yaml#/definitions/AnyType
+
+additionalProperties: false

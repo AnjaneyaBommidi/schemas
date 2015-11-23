@@ -3,6 +3,7 @@
 # Because JSON files will be parsed as YAML, you can also include comments in your JSON files.
 # Just be sure you use the "#" character for comments, rather than "//" or "/* */".
 {
+  "postman": 2.0,
   "info": {
     "author": {
       "url": "http://www.myfavoritethings.com",

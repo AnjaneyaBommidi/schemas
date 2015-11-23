@@ -1,4 +1,4 @@
-title: Folder
+title: User Folder
 description: |-
   A folder can contain one or more HTTP requests, in a specific order.
   It can also contain other folders, allowing for an infinitely-deep level of nesting.
@@ -22,5 +22,5 @@ properties:
 
 patternProperties:
   "^_":
-    $ref: types.yaml#/definitions/AnyType
+    $ref: ../types.yaml#/definitions/AnyType
 additionalProperties: false

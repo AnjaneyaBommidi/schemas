@@ -22,14 +22,14 @@ properties:
     minLength: 0
   type:
     anyOf:
-      - $ref: "#/definitions/TypeName"
+      - $ref: types.yaml#/definitions/TypeName
       - type: array
         items:
-          $ref: "#/definitions/TypeName"
+          $ref: types.yaml#/definitions/TypeName
         minItems: 1
         uniqueItems: true
   default:
-    $ref: types.yaml#/definitions/AnyType
+    $ref: ../types.yaml#/definitions/AnyType
   minimum:
     type: number
   maximum:
@@ -45,22 +45,22 @@ properties:
     minimum: 0
     exclusiveMinimum: true
   maxLength:
-    $ref: types.yaml#/definitions/PositiveInteger
+    $ref: ../types.yaml#/definitions/PositiveInteger
   minLength:
-    $ref: types.yaml#/definitions/PositiveIntegerDefault0
+    $ref: ../types.yaml#/definitions/PositiveIntegerDefault0
   pattern:
     type: string
     format: regex
   enum:
     type: array
     items:
-      $ref: types.yaml#/definitions/AnyType
+      $ref: ../types.yaml#/definitions/AnyType
     minItems: 1
     uniqueItems: true
   items:
     anyOf:
       - $ref: "#"
-      - $ref: "#/definitions/SchemaArray"
+      - $ref: types.yaml#/definitions/SchemaArray
     default: {}
   additionalItems:
     anyOf:
@@ -68,70 +68,50 @@ properties:
       - $ref: "#"
     default: {}
   maxItems:
-    $ref: types.yaml#/definitions/PositiveInteger
+    $ref: ../types.yaml#/definitions/PositiveInteger
   minItems:
-    $ref: types.yaml#/definitions/PositiveIntegerDefault0
+    $ref: ../types.yaml#/definitions/PositiveIntegerDefault0
   uniqueItems:
     type: boolean
     default: false
   maxProperties:
-    $ref: types.yaml#/definitions/PositiveInteger
+    $ref: ../types.yaml#/definitions/PositiveInteger
   minProperties:
-    $ref: types.yaml#/definitions/PositiveIntegerDefault0
+    $ref: ../types.yaml#/definitions/PositiveIntegerDefault0
   required:
-    $ref: types.yaml#/definitions/StringArray
+    $ref: ../types.yaml#/definitions/StringArray
   properties:
-    $ref: "#/definitions/SchemaMap"
+    $ref: types.yaml#/definitions/SchemaMap
   patternProperties:
-    $ref: "#/definitions/SchemaMap"
+    $ref: types.yaml#/definitions/SchemaMap
   additionalProperties:
     anyOf:
       - type: boolean
       - $ref: "#"
     default: {}
   definitions:
-    $ref: "#/definitions/SchemaMap"
+    $ref: types.yaml#/definitions/SchemaMap
   dependencies:
     type: object
     patternProperties:
       ".*":
         anyOf:
           - $ref: "#"
-          - $ref: types.yaml#/definitions/StringArray
+          - $ref: ../types.yaml#/definitions/StringArray
   allOf:
-    $ref: "#/definitions/SchemaArray"
+    $ref: types.yaml#/definitions/SchemaArray
   anyOf:
-    $ref: "#/definitions/SchemaArray"
+    $ref: types.yaml#/definitions/SchemaArray
   oneOf:
-    $ref: "#/definitions/SchemaArray"
+    $ref: types.yaml#/definitions/SchemaArray
   not:
     $ref: "#"
 patternProperties:
   "^_":
-    $ref: types.yaml#/definitions/AnyType
+    $ref: ../types.yaml#/definitions/AnyType
 additionalProperties: false
 
 dependencies:
     exclusiveMaximum: [ maximum ]
     exclusiveMinimum: [ minimum ]
 default: {}
-
-definitions:
-  SchemaArray:
-    type: array
-    minItems: 1
-    items:
-      $ref: "#"
-
-  SchemaMap:
-    type: object
-    patternProperties:
-      ".*":
-        $ref: "#"
-    additionalProperties:
-      $ref: "#"
-    default: {}
-
-  TypeName:
-    type: string
-    enum: ["array", "boolean", "integer", "null", "number", "object", "string"]

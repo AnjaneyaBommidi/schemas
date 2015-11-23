@@ -10,7 +10,6 @@ description: >-
 
 type: object
 patternProperties:
-  # Each property name defines a variable of the same name.
   # Variable names MUST begin with a letter, and can ONLY contain letters, numbers, and underscores.
   # Variable names CANNOT contain spaces or special characters.
   "^[a-zA-Z]\\w+$":

@@ -1,4 +1,5 @@
 {
+  "postman": 2.0,
   "info": {
     "name": "Wikipedia Search for Abraham Lincoln",
     "description": "This is the full request and response of doing a search for \"Abraham Lincoln\" on Wikipedia. See the `http-archive.json` file for the same request in HAR format (https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/HAR/Overview.html)."

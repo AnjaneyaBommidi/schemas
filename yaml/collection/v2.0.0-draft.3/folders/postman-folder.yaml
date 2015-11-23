@@ -1,4 +1,4 @@
-title: Special Folder
+title: Postman Folder
 description: |-
   The Postman Collection Format defines a few special top-level folders that have explicit purposes:
 
@@ -34,5 +34,5 @@ properties:
 
 patternProperties:
   "^_":
-    $ref: types.yaml#/definitions/AnyType
+    $ref: ../types.yaml#/definitions/AnyType
 additionalProperties: false

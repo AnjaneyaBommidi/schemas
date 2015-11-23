@@ -2,18 +2,26 @@ id: http://schema.getpostman.com/json/collection/v2.0.0-draft.3/
 title: Postman Collection Format v2.0
 type: object
 required:
+  - postman
   - info
 properties:
+  postman:
+    type: number
+    minimum: 2.0
+    maximum: 2.0
+    description: The Postman Collection Format version
   info:
     $ref: "#/definitions/Info"
   variables:
     $ref: "#/definitions/Variables"
+#  schema:
+#    $ref: "#/definitions/Schema"
   requests:
-    $ref: "#/definitions/SpecialFolder"
+    $ref: "#/definitions/PostmanFolder"
   examples:
-    $ref: "#/definitions/SpecialFolder"
+    $ref: "#/definitions/PostmanFolder"
   tests:
-    $ref: "#/definitions/SpecialFolder"
+    $ref: "#/definitions/PostmanFolder"
   scripts:
     $ref: "#/definitions/Scripting/definitions/Scripts"
 
@@ -25,23 +33,25 @@ additionalProperties: false
 definitions:
   Info:
     $ref: info.yaml
-  Variables:
-    $ref: variables.yaml
   Version:
     $ref: version.yaml
-  SpecialFolder:
-    $ref: special-folder.yaml
-  Folder:
-    $ref: folder.yaml
+  Variables:
+    $ref: variables.yaml
+#  Schema:
+#    $ref: schema/schema.yaml
+  PostmanFolder:
+    $ref: folders/postman-folder.yaml
+  UserFolder:
+    $ref: folders/user-folder.yaml
   Items:
-    $ref: items.yaml
+    $ref: folders/items.yaml
   Request:
-    $ref: request.yaml
+    $ref: requests/request.yaml
   Response:
-    $ref: response.yaml
+    $ref: requests/response.yaml
   Cookies:
-    $ref: cookies.yaml
+    $ref: requests/cookies.yaml
+  Scripting:
+    $ref: requests/scripting.yaml
   Types:
     $ref: types.yaml
-  Scripting:
-    $ref: scripting.yaml

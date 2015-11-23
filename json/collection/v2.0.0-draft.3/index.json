@@ -3,9 +3,16 @@
   "title": "Postman Collection Format v2.0",
   "type": "object",
   "required": [
+    "postman",
     "info"
   ],
   "properties": {
+    "postman": {
+      "type": "number",
+      "minimum": 2,
+      "maximum": 2,
+      "description": "The Postman Collection Format version"
+    },
     "info": {
       "$ref": "#/definitions/Info"
     },
@@ -13,13 +20,13 @@
       "$ref": "#/definitions/Variables"
     },
     "requests": {
-      "$ref": "#/definitions/SpecialFolder"
+      "$ref": "#/definitions/PostmanFolder"
     },
     "examples": {
-      "$ref": "#/definitions/SpecialFolder"
+      "$ref": "#/definitions/PostmanFolder"
     },
     "tests": {
-      "$ref": "#/definitions/SpecialFolder"
+      "$ref": "#/definitions/PostmanFolder"
     },
     "scripts": {
       "$ref": "#/definitions/Scripting/definitions/Scripts"
@@ -109,20 +116,6 @@
         }
       }
     },
-    "Variables": {
-      "title": "Variables",
-      "description": "Using variables in your Postman requests eliminates the need to duplicate requests, which can save a lot of time. Variables can be referenced anywhere in a request.\nVariables defined at the top-level of a collection can be overridden by variables defined at lower levels of the collection, such as in an Endpoint or in a Request.\nCollection Variables can be overridden by Environment Variables in Postman and Newman.",
-      "type": "object",
-      "patternProperties": {
-        "^[a-zA-Z]\\w+$": {
-          "$ref": "#/definitions/Types/definitions/AnyType"
-        },
-        "^_": {
-          "$ref": "#/definitions/Types/definitions/AnyType"
-        }
-      },
-      "additionalProperties": false
-    },
     "Version": {
       "title": "Version",
       "description": "A version number, either as a string or as an object",
@@ -181,8 +174,22 @@
         }
       }
     },
-    "SpecialFolder": {
-      "title": "Special Folder",
+    "Variables": {
+      "title": "Variables",
+      "description": "Using variables in your Postman requests eliminates the need to duplicate requests, which can save a lot of time. Variables can be referenced anywhere in a request.\nVariables defined at the top-level of a collection can be overridden by variables defined at lower levels of the collection, such as in an Endpoint or in a Request.\nCollection Variables can be overridden by Environment Variables in Postman and Newman.",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z]\\w+$": {
+          "$ref": "#/definitions/Types/definitions/AnyType"
+        },
+        "^_": {
+          "$ref": "#/definitions/Types/definitions/AnyType"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PostmanFolder": {
+      "title": "Postman Folder",
       "description": "The Postman Collection Format defines a few special top-level folders that have explicit purposes:\n\n- examples:\n  This folder is for requests that are meant to be examples of how to use your API. They will usually\n  contain sample data, populated headers, and often even saved responses.  These requests usually\n  don't have any scripts.\n\n- tests:\n  This folder is for requests that are meant to test specific functionality of your API.  This can\n  include end-to-end tests, smoke tests, uptime monitoring, etc.  It's very common for these tests\n  to contain scripts and use variables to store state between requests.  It's also very common for\n  this folder to contain many sub-folders for different test runs.  When using the Newman command-line\n  tool, you can choose to run a specific sub-folder within this folder.\n\n- requests:\n  This is a catch-all folder for any type of request, or for requests that don't belong in one\n  of the other folders.  For example, this is a good place to save requests that you use frequently\n  during debugging or development of your API.",
       "type": "object",
       "required": [
@@ -206,8 +213,8 @@
       },
       "additionalProperties": false
     },
-    "Folder": {
-      "title": "Folder",
+    "UserFolder": {
+      "title": "User Folder",
       "description": "A folder can contain one or more HTTP requests, in a specific order.\nIt can also contain other folders, allowing for an infinitely-deep level of nesting.",
       "type": "object",
       "required": [
@@ -244,7 +251,7 @@
       "items": {
         "oneOf": [
           {
-            "$ref": "#/definitions/Folder"
+            "$ref": "#/definitions/UserFolder"
           },
           {
             "$ref": "#/definitions/Request"
@@ -600,9 +607,38 @@
         }
       }
     },
+    "Scripting": {
+      "title": "Scripting",
+      "description": "Postman Collections can contain JavaScript code that runs when certain events occur. Your scripts can also reference external dependencies, such as Node modules, Bower packages, jQuery plug-ins, etc.",
+      "type": "null",
+      "definitions": {
+        "EventHandler": {
+          "$ref": "#/definitions/Scripting/definitions/Script",
+          "description": "Event handlers are a special type of script that responds to a specific event.  Whereas normal scripts are meant to be reusable and general-purpose, event handlers are meant to be written for a specific event and request. At some point in the future, event handlers may be able to accept parameters and return results."
+        },
+        "Scripts": {
+          "type": "object",
+          "description": "These top-level scripts are accessible to all other scripts in the collection.\nThis is a great place to define classes, utility functions, global objects, and\nother general-purpose, reusable code.\n\nScripts that return a value, or which contain AMD or CommonJS modules, will be exported\nas global variables with the same name as the script.",
+          "patternProperties": {
+            "^\\w+": {
+              "$ref": "#/definitions/Scripting/definitions/Script"
+            },
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        },
+        "Script": {
+          "type": "string",
+          "minLength": 0,
+          "description": "A script is just a string containing JavaScript code, but because Postman Collection Format\nis built on top of JSON Schema, you can take advantage of the `$ref` keyword to reference\nexternal JavaScript files and URLs.\n\nScripts can export values (such as classes, functions, objects, etc.) in several different ways:\n\n- Modules:\n  Postman supports AMD and CommonJS module formats. The module exports will be available to\n  your scripts as a global variable.  The variable name is the same as the key on the `Scripts` object.\n\n- Return values:\n  If the script returns a value, then that value is treated exactly like a module export\n  as described above.\n\n- Globals:\n  Scripts can defien global variables directly by assigning properties to the `window` or `global`\n  objects. (e.g. `window.myVar = \"hello world\"`)"
+        }
+      }
+    },
     "Types": {
       "title": "Data Types",
-      "description": "Various data types that are reused throughouth the schema",
+      "description": "Various data types that are used throughout the Postman Collection Format",
       "type": "null",
       "definitions": {
         "Byte": {
@@ -717,235 +753,6 @@
           "minItems": 0,
           "additionalItems": true
         },
-        "JsonSchema": {
-          "title": "JSON Schema",
-          "description": "A full JSON Schema, which allows the user to define any data type, including primitives, objects, arrays, enumerations, etc.  They can also use \"allOf\", \"anyOf\", \"oneOf\", and \"not\" to create derived types, compound types, etc.",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string",
-              "format": "uri",
-              "minLength": 0
-            },
-            "$schema": {
-              "type": "string",
-              "format": "uri",
-              "minLength": 0
-            },
-            "title": {
-              "type": "string",
-              "minLength": 0
-            },
-            "description": {
-              "type": "string",
-              "minLength": 0
-            },
-            "type": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/TypeName"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/TypeName"
-                  },
-                  "minItems": 1,
-                  "uniqueItems": true
-                }
-              ]
-            },
-            "default": {
-              "$ref": "#/definitions/Types/definitions/AnyType"
-            },
-            "minimum": {
-              "type": "number"
-            },
-            "maximum": {
-              "type": "number"
-            },
-            "exclusiveMinimum": {
-              "type": "boolean",
-              "default": false
-            },
-            "exclusiveMaximum": {
-              "type": "boolean",
-              "default": false
-            },
-            "multipleOf": {
-              "type": "number",
-              "minimum": 0,
-              "exclusiveMinimum": true
-            },
-            "maxLength": {
-              "$ref": "#/definitions/Types/definitions/PositiveInteger"
-            },
-            "minLength": {
-              "$ref": "#/definitions/Types/definitions/PositiveIntegerDefault0"
-            },
-            "pattern": {
-              "type": "string",
-              "format": "regex"
-            },
-            "enum": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Types/definitions/AnyType"
-              },
-              "minItems": 1,
-              "uniqueItems": true
-            },
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Types/definitions/JsonSchema"
-                },
-                {
-                  "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaArray"
-                }
-              ],
-              "default": {}
-            },
-            "additionalItems": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/Types/definitions/JsonSchema"
-                }
-              ],
-              "default": {}
-            },
-            "maxItems": {
-              "$ref": "#/definitions/Types/definitions/PositiveInteger"
-            },
-            "minItems": {
-              "$ref": "#/definitions/Types/definitions/PositiveIntegerDefault0"
-            },
-            "uniqueItems": {
-              "type": "boolean",
-              "default": false
-            },
-            "maxProperties": {
-              "$ref": "#/definitions/Types/definitions/PositiveInteger"
-            },
-            "minProperties": {
-              "$ref": "#/definitions/Types/definitions/PositiveIntegerDefault0"
-            },
-            "required": {
-              "$ref": "#/definitions/Types/definitions/StringArray"
-            },
-            "properties": {
-              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaMap"
-            },
-            "patternProperties": {
-              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaMap"
-            },
-            "additionalProperties": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/Types/definitions/JsonSchema"
-                }
-              ],
-              "default": {}
-            },
-            "definitions": {
-              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaMap"
-            },
-            "dependencies": {
-              "type": "object",
-              "patternProperties": {
-                ".*": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/definitions/Types/definitions/JsonSchema"
-                    },
-                    {
-                      "$ref": "#/definitions/Types/definitions/StringArray"
-                    }
-                  ]
-                }
-              }
-            },
-            "allOf": {
-              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaArray"
-            },
-            "anyOf": {
-              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaArray"
-            },
-            "oneOf": {
-              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaArray"
-            },
-            "not": {
-              "$ref": "#/definitions/Types/definitions/JsonSchema"
-            }
-          },
-          "patternProperties": {
-            "^_": {
-              "$ref": "#/definitions/Types/definitions/AnyType"
-            }
-          },
-          "additionalProperties": false,
-          "dependencies": {
-            "exclusiveMaximum": [
-              "maximum"
-            ],
-            "exclusiveMinimum": [
-              "minimum"
-            ]
-          },
-          "default": {},
-          "definitions": {
-            "SchemaArray": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/Types/definitions/JsonSchema"
-              }
-            },
-            "SchemaMap": {
-              "type": "object",
-              "patternProperties": {
-                ".*": {
-                  "$ref": "#/definitions/Types/definitions/JsonSchema"
-                }
-              },
-              "additionalProperties": {
-                "$ref": "#/definitions/Types/definitions/JsonSchema"
-              },
-              "default": {}
-            },
-            "TypeName": {
-              "type": "string",
-              "enum": [
-                "array",
-                "boolean",
-                "integer",
-                "null",
-                "number",
-                "object",
-                "string"
-              ]
-            }
-          }
-        },
-        "JsonReference": {
-          "type": "object",
-          "required": [
-            "$ref"
-          ],
-          "properties": {
-            "$ref": {
-              "type": "string",
-              "minLength": 1
-            }
-          },
-          "additionalProperties": true
-        },
         "HttpMethod": {
           "type": "string",
           "minLength": 1,
@@ -966,35 +773,6 @@
             "PROPFIND",
             "VIEW"
           ]
-        }
-      }
-    },
-    "Scripting": {
-      "title": "Scripting",
-      "description": "Postman Collections can contain JavaScript code that runs when certain events occur. Your scripts can also reference external dependencies, such as Node modules, Bower packages, jQuery plug-ins, etc.",
-      "type": "null",
-      "definitions": {
-        "EventHandler": {
-          "$ref": "#/definitions/Scripting/definitions/Script",
-          "description": "Event handlers are a special type of script that responds to a specific event.  Whereas normal scripts are meant to be reusable and general-purpose, event handlers are meant to be written for a specific event and request. At some point in the future, event handlers may be able to accept parameters and return results."
-        },
-        "Scripts": {
-          "type": "object",
-          "description": "These top-level scripts are accessible to all other scripts in the collection.\nThis is a great place to define classes, utility functions, global objects, and\nother general-purpose, reusable code.\n\nScripts that return a value, or which contain AMD or CommonJS modules, will be exported\nas global variables with the same name as the script.",
-          "patternProperties": {
-            "^\\w+": {
-              "$ref": "#/definitions/Scripting/definitions/Script"
-            },
-            "^_": {
-              "$ref": "#/definitions/Types/definitions/AnyType"
-            }
-          },
-          "additionalProperties": false
-        },
-        "Script": {
-          "type": "string",
-          "minLength": 0,
-          "description": "A script is just a string containing JavaScript code, but because Postman Collection Format\nis built on top of JSON Schema, you can take advantage of the `$ref` keyword to reference\nexternal JavaScript files and URLs.\n\nScripts can export values (such as classes, functions, objects, etc.) in several different ways:\n\n- Modules:\n  Postman supports AMD and CommonJS module formats. The module exports will be available to\n  your scripts as a global variable.  The variable name is the same as the key on the `Scripts` object.\n\n- Return values:\n  If the script returns a value, then that value is treated exactly like a module export\n  as described above.\n\n- Globals:\n  Scripts can defien global variables directly by assigning properties to the `window` or `global`\n  objects. (e.g. `window.myVar = \"hello world\"`)"
         }
       }
     }

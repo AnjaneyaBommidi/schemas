@@ -1,0 +1,36 @@
+title: Postman Schema
+description: >-
+  This schema contains a full definition of your API, including it's data types, security requirements,
+  resources, methods, and even deprecation information.
+type: object
+required:
+  - resources
+properties:
+  definitions:
+    $ref: types.yaml#/definitions/SchemaMap
+    description: >-
+      Defines top-level data types that are used throughout your API.  For example,
+      an API for an online store might define types for Customer, Product, and Order.
+
+      Each type definition is a JSON Schema. You can define relationships between types using
+      JSON Reference ($ref), and and you can define compound and derived types using the
+      JSON Schema keywords "allOf", "anyOf", "oneOf", and "not".  For more details, see:
+
+        - https://spacetelescope.github.io/understanding-json-schema/reference/combining.html
+
+        - https://spacetelescope.github.io/understanding-json-schema/reference/combining.html
+  securitySchemes:
+
+    $ref: security-schemes.yaml
+    description: >-
+      Defines the security schemas that are supported by your API.  This does NOT indicate that
+      a given security scheme is supported/required by any specific resource or method.  Each
+      resource and method can define which security schemes it supports.
+patternProperties:
+  "^_":
+    $ref: types.yaml#/definitions/AnyType
+additionalProperties: false
+
+definitions:
+  SchemaTypes:
+    $ref: types.yaml

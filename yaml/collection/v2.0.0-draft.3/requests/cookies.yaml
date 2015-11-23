@@ -10,7 +10,7 @@ patternProperties:
       - $ref: "#/definitions/CookieString"
       - $ref: "#/definitions/CookieObject"
   "^_":
-    $ref: types.yaml#/definitions/AnyType
+    $ref: ../types.yaml#/definitions/AnyType
 additionalProperties: false
 
 definitions:
@@ -49,12 +49,12 @@ definitions:
           Cookies with this attribute are not accessible via non-HTTP methods, such as JavaScript
           (using `document.cookie`), and therefore cannot be easily stolen via cross-site scripting
       expires:
-        $ref: types.yaml#/definitions/Date
+        $ref: ../types.yaml#/definitions/Date
         description: >-
           The date that the cookie expires. We recommend that you use ISO-8601 format
           (e.g. `2015-11-26T00:16:38.000Z`).  Postman will automatically convert it
           to RFC 1123 format (e.g. `Sun, 26 Nov 2015 00:16:38 GMT`)
     patternProperties:
       "^_":
-        $ref: types.yaml#/definitions/AnyType
+        $ref: ../types.yaml#/definitions/AnyType
     additionalProperties: false

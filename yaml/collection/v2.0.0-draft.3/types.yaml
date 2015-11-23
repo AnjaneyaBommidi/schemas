@@ -1,5 +1,5 @@
 title: Data Types
-description: Various data types that are reused throughouth the schema
+description: Various data types that are used throughout the Postman Collection Format
 type: "null"
 definitions:
   Byte:
@@ -90,19 +90,6 @@ definitions:
       $ref: "#/definitions/AnyType"
     minItems: 0
     additionalItems: true
-
-  JsonSchema:
-    $ref: json-schema.yaml
-
-  JsonReference:
-    type: object
-    required:
-      - $ref
-    properties:
-      $ref:
-        type: string
-        minLength: 1
-    additionalProperties: true
 
   HttpMethod:
     type: string

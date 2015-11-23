@@ -16,7 +16,7 @@ properties:
     description: >
       A description of the request. This field supports markdown syntax to better format the description.
   variables:
-    $ref: variables.yaml
+    $ref: ../variables.yaml
   url:
     type: string
     minLength: 0
@@ -25,10 +25,10 @@ properties:
       in double curly brackets anywhere in the URL string
       (e.g. `{{protocol}}://{{server_name}}:{{port_number}}/api/{{version_number}}/users?username={{user_name}}`).
   method:
-    $ref: types.yaml#/definitions/HttpMethod
+    $ref: ../types.yaml#/definitions/HttpMethod
     description: The HTTP method associated with this request
   headers:
-    $ref: types.yaml#/definitions/StringMap
+    $ref: ../types.yaml#/definitions/StringMap
     description: >
       The HTTP request headers, as set of name/value pairs.
       Each name and/or value can contain variable names in double curly brackets (e.g. `{{AUTH_HEADER_NAME}}`)
@@ -65,12 +65,12 @@ properties:
           failed tests (e.g. `tests.hasUsername = JSON.parse(responseBody).username.length > 0`).
     patternProperties:
       "^_":
-        $ref: types.yaml#/definitions/AnyType
+        $ref: ../types.yaml#/definitions/AnyType
     additionalProperties: false
 
 patternProperties:
   "^_":
-    $ref: types.yaml#/definitions/AnyType
+    $ref: ../types.yaml#/definitions/AnyType
 additionalProperties: false
 
 definitions:
@@ -100,12 +100,12 @@ definitions:
         type: string
         enum: [urlencoded]
       fields:
-        $ref: types.yaml#/definitions/StringMap
+        $ref: ../types.yaml#/definitions/StringMap
         description: >-
           Field names or values can be contain variables in double curly brackets (e.g. `{{Some_Value}}`)
     patternProperties:
       "^_":
-        $ref: types.yaml#/definitions/AnyType
+        $ref: ../types.yaml#/definitions/AnyType
     additionalProperties: false
 
   MultiPartRequestBody:
@@ -124,12 +124,12 @@ definitions:
         type: string
         enum: [multipart]
       fields:
-        $ref: types.yaml#/definitions/StringMap
+        $ref: ../types.yaml#/definitions/StringMap
         description: >-
           Field names or values can be contain variables in double curly brackets (e.g. `{{Some_Value}}`)
     patternProperties:
       "^_":
-        $ref: types.yaml#/definitions/AnyType
+        $ref: ../types.yaml#/definitions/AnyType
     additionalProperties: false
 
   RawRequestBody:
@@ -155,11 +155,11 @@ definitions:
         minLength: 0
         patternProperties:
           ".*":
-            $ref: types.yaml#/definitions/AnyType
+            $ref: ../types.yaml#/definitions/AnyType
         additionalProperties: true
     patternProperties:
       "^_":
-        $ref: types.yaml#/definitions/AnyType
+        $ref: ../types.yaml#/definitions/AnyType
     additionalProperties: false
 
   BinaryRequestBody:
@@ -174,9 +174,9 @@ definitions:
         type: string
         enum: [binary]
       content:
-        $ref: types.yaml#/definitions/EncodedString
+        $ref: ../types.yaml#/definitions/EncodedString
     patternProperties:
       "^_":
-        $ref: types.yaml#/definitions/AnyType
+        $ref: ../types.yaml#/definitions/AnyType
     additionalProperties: false
 

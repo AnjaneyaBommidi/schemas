@@ -3,6 +3,6 @@ description: An array of requests and folders, in a specific order
 type: array
 items:
   oneOf:
-    - $ref: folder.yaml
-    - $ref: request.yaml
+    - $ref: user-folder.yaml
+    - $ref: ../requests/request.yaml
 minItems: 0

@@ -8,6 +8,7 @@
 # JSON Schema $ref pointers to reference external JavaScript files, and Postman will automatically
 # read the scripts from those files.  See the "json-and-yaml" sample for details.
 #
+postman: 2.0
 info:
   name: My Favorite Things
 

@@ -21,7 +21,7 @@
     "postman-collection": "./bin/postman-collection.js"
   },
   "scripts": {
-    "start": "bin/postman-collection.js validate json/collection/v2.0.0-draft.3/samples/**/index.*",
+    "start": "bin/postman-collection.js validate examples/collection/v2.0.0-draft.3/*/index.*",
     "test": "npm run build-schema && npm run validate-schema && npm start",
     "build-schema": "cd yaml && node ../bin/postman-collection.js bundle --no-validate --out ../json collection/v2.0.0-draft.3/index.yaml",
     "validate-schema": "z-schema json/collection/v2.0.0-draft.3/index.json --pedanticCheck --forceAdditional --forceItems --forceMinItems --forceMinLength --forceProperties --noExtraKeywords --noTypeless --strictUris"

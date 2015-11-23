@@ -49,7 +49,7 @@ scripts:
   # This is another reference to an external file,
   # but this time it's a locally-installed Node module
   lodash:
-    $ref: ../../../../../node_modules/lodash/index.js
+    $ref: ../../../../node_modules/lodash/index.js
 
   # And here's an external reference to a URL.
   jQuery:

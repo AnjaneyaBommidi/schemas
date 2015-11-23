@@ -2,16 +2,13 @@ title: Response
 description: >-
   Contains a full HTTP response, include status code, headers, cookies, and response body
 type: object
+required:
+  - status
 properties:
   name:
-    type: string
-    minLength: 1
-    description: A friendly name can be added to each response
+    $ref: ../types.yaml#/definitions/Name
   description:
-    type: string
-    minLength: 0
-    description: >
-      A description of the response. This field supports markdown syntax to better format the description.
+    $ref: ../types.yaml#/definitions/Description
   time:
     type: number
     minimum: 0

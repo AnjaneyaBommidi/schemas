@@ -1,8 +1,8 @@
 title: Items
 description: An array of requests and folders, in a specific order
 type: array
+minItems: 0
 items:
   oneOf:
-    - $ref: user-folder.yaml
     - $ref: ../requests/request.yaml
-minItems: 0
+    - $ref: folder.yaml

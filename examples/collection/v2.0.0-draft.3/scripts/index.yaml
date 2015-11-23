@@ -8,7 +8,7 @@
 # JSON Schema $ref pointers to reference external JavaScript files, and Postman will automatically
 # read the scripts from those files.  See the "json-and-yaml" sample for details.
 #
-postman: 2.0
+postman: '2.0'
 info:
   name: My Favorite Things
 
@@ -57,32 +57,31 @@ scripts:
     $ref: https://code.jquery.com/jquery-2.1.4.min.js
 
 requests:
-  items:
-    - description: Returns your favorite things for the given category
-      url: http://www.myfavoritethings.com/{{Category}}
-      method: GET
-      events:
-        # Event handlers are just like scripts, but instead of being global and reusable,
-        # they are intended to be single-purpose.  In this case, the event handler sets
-        # the {{Category}} variable, which is needed by the request
-        onRequest: |-
-          var category = postman.getEnvironmentVariable('Category');
-          if (!category) {
-            // By default, return your favorite colors
-            postman.setEnvironmentVariable('Category', 'colors');
-          }
+  - description: Returns your favorite things for the given category
+    url: http://www.myfavoritethings.com/{{Category}}
+    method: GET
+    events:
+      # Event handlers are just like scripts, but instead of being global and reusable,
+      # they are intended to be single-purpose.  In this case, the event handler sets
+      # the {{Category}} variable, which is needed by the request
+      onRequest: |-
+        var category = postman.getEnvironmentVariable('Category');
+        if (!category) {
+          // By default, return your favorite colors
+          postman.setEnvironmentVariable('Category', 'colors');
+        }
 
-        # This is a response event handler, which runs as soon as the response comes back,
-        # but BEFORE any tests run.  This is a good time to set variables based on the response.
-        onResponse: |-
-          var favorites = JSON.parse(responseBody);
-          if (favorites.length > 0) {
-            postman.setEnvironmentVariable('my_favorites', favorites);
-          }
+      # This is a response event handler, which runs as soon as the response comes back,
+      # but BEFORE any tests run.  This is a good time to set variables based on the response.
+      onResponse: |-
+        var favorites = JSON.parse(responseBody);
+        if (favorites.length > 0) {
+          postman.setEnvironmentVariable('my_favorites', favorites);
+        }
 
-        # This is a test script.  It performs assertions on the response to make sure
-        # the API is behaving properly
-        onTest: |-
-          tests['Status code is 200'] = responseCode.code === 200;
-          tests['Content-Type header is set'] = !!postman.getResponseHeader('Content-Type');
+      # This is a test script.  It performs assertions on the response to make sure
+      # the API is behaving properly
+      onTest: |-
+        tests['Status code is 200'] = responseCode.code === 200;
+        tests['Content-Type header is set'] = !!postman.getResponseHeader('Content-Type');
 

@@ -1,6 +1,9 @@
-title: Postman Folder
+title: Folder
 description: |-
-  The Postman Collection Format defines a few special top-level folders that have explicit purposes:
+  A folder can contain one or more HTTP requests, in a specific order.
+  It can also contain other folders, allowing for an infinitely-deep level of nesting.
+
+  The Postman Collection Format defines a few special folders that have explicit purposes:
 
   - examples:
     This folder is for requests that are meant to be examples of how to use your API. They will usually
@@ -21,17 +24,15 @@ description: |-
 
 type: object
 required:
+  - name
   - items
 properties:
+  name:
+    $ref: ../types.yaml#/definitions/Name
   description:
-    type: string
-    minLength: 0
-    description: >
-      A description of the folder. This field supports markdown syntax to better format the description.
+    $ref: ../types.yaml#/definitions/Description
   items:
     $ref: items.yaml
-    description: The contents of the folder. This can include HTTP requsts, as well as other folders.
-
 patternProperties:
   "^_":
     $ref: ../types.yaml#/definitions/AnyType

@@ -17,11 +17,11 @@ properties:
 #  schema:
 #    $ref: "#/definitions/Schema"
   requests:
-    $ref: "#/definitions/PostmanFolder"
+    $ref: "#/definitions/Items"
   examples:
-    $ref: "#/definitions/PostmanFolder"
+    $ref: "#/definitions/Items"
   tests:
-    $ref: "#/definitions/PostmanFolder"
+    $ref: "#/definitions/Items"
   scripts:
     $ref: "#/definitions/Scripting/definitions/Scripts"
 
@@ -39,10 +39,10 @@ definitions:
     $ref: variables.yaml
 #  Schema:
 #    $ref: schema/schema.yaml
-  PostmanFolder:
-    $ref: folders/postman-folder.yaml
-  UserFolder:
-    $ref: folders/user-folder.yaml
+  Folder:
+    $ref: folders/folder.yaml
+  Items:
+    $ref: folders/items.yaml
   Items:
     $ref: folders/items.yaml
   Request:

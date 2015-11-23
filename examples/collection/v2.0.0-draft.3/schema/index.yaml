@@ -9,3 +9,12 @@ info:
     This API lets you keep track of your favorite things.
     Whether it's your favorite sports teams,
     your favorite holidays, or even your favorite colors.
+
+requests:
+  - request:
+      method: GET
+      url: http://www.foo.bar
+      responses:
+        - response:
+            status:
+              code: 200

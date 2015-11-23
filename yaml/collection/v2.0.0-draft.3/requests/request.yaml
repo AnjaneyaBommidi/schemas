@@ -7,14 +7,9 @@ required:
   - url
 properties:
   name:
-    type: string
-    minLength: 1
-    description: A friendly name can be added to each request
+    $ref: ../types.yaml#/definitions/Name
   description:
-    type: string
-    minLength: 0
-    description: >
-      A description of the request. This field supports markdown syntax to better format the description.
+    $ref: ../types.yaml#/definitions/Description
   variables:
     $ref: ../variables.yaml
   url:
@@ -37,36 +32,10 @@ properties:
     description: A structured version of the "Cookie" request header
   body:
     $ref: "#/definitions/RequestBody"
-  responses:
-    type: array
-    items:
-      $ref: response.yaml
-    minItems: 0
-    description: You can store multiple responses for a single request
   events:
-    type: object
-    properties:
-      onRequest:
-        $ref: scripting.yaml#/definitions/EventHandler
-        description: >-
-          This event fires when the request is about to be sent.  It's a good opportunity to populate
-          environment variables that are needed by the request.
-      onResponse:
-        $ref: scripting.yaml#/definitions/EventHandler
-        description: >-
-          This event fires when the response is received.  It's a good opportunity to save parts of
-          the response as environment variables, or to manipulate the response to prepare it for
-          the `onTest` event.
-      onTest:
-        $ref: scripting.yaml#/definitions/EventHandler
-        description: >-
-          This event fires after the `onResponse` event.  This is where you should make assertions
-          on the response. You can set properties of the `tests` object to indicate test passed or
-          failed tests (e.g. `tests.hasUsername = JSON.parse(responseBody).username.length > 0`).
-    patternProperties:
-      "^_":
-        $ref: ../types.yaml#/definitions/AnyType
-    additionalProperties: false
+    $ref: "#/definitions/Events"
+  responses:
+    $ref: "#/definitions/Responses"
 
 patternProperties:
   "^_":
@@ -180,3 +149,37 @@ definitions:
         $ref: ../types.yaml#/definitions/AnyType
     additionalProperties: false
 
+  Events:
+    type: object
+    properties:
+      onRequest:
+        $ref: scripting.yaml#/definitions/EventHandler
+        description: >-
+          This event fires when the request is about to be sent.  It's a good opportunity to populate
+          environment variables that are needed by the request.
+      onResponse:
+        $ref: scripting.yaml#/definitions/EventHandler
+        description: >-
+          This event fires when the response is received.  It's a good opportunity to save parts of
+          the response as environment variables, or to manipulate the response to prepare it for
+          the `onTest` event.
+      onTest:
+        $ref: scripting.yaml#/definitions/EventHandler
+        description: >-
+          This event fires after the `onResponse` event.  This is where you should make assertions
+          on the response. You can set properties of the `tests` object to indicate test passed or
+          failed tests (e.g. `tests.hasUsername = JSON.parse(responseBody).username.length > 0`).
+    patternProperties:
+      "^_":
+        $ref: ../types.yaml#/definitions/AnyType
+    additionalProperties: false
+
+  Responses:
+    type: array
+    minItems: 0
+    items:
+      $ref: response.yaml
+    description: >-
+      Postman allows you to store multiple responses for a request.  This is useful for example
+      requests, so you can include examples of different possible responses.  It's also useful for
+      debugging purposes, where you may want to save multiple responses for reference purposes.

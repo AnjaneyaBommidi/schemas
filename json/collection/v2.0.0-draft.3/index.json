@@ -20,13 +20,13 @@
       "$ref": "#/definitions/Variables"
     },
     "requests": {
-      "$ref": "#/definitions/PostmanFolder"
+      "$ref": "#/definitions/Items"
     },
     "examples": {
-      "$ref": "#/definitions/PostmanFolder"
+      "$ref": "#/definitions/Items"
     },
     "tests": {
-      "$ref": "#/definitions/PostmanFolder"
+      "$ref": "#/definitions/Items"
     },
     "scripts": {
       "$ref": "#/definitions/Scripting/definitions/Scripts"
@@ -188,34 +188,9 @@
       },
       "additionalProperties": false
     },
-    "PostmanFolder": {
-      "title": "Postman Folder",
-      "description": "The Postman Collection Format defines a few special top-level folders that have explicit purposes:\n\n- examples:\n  This folder is for requests that are meant to be examples of how to use your API. They will usually\n  contain sample data, populated headers, and often even saved responses.  These requests usually\n  don't have any scripts.\n\n- tests:\n  This folder is for requests that are meant to test specific functionality of your API.  This can\n  include end-to-end tests, smoke tests, uptime monitoring, etc.  It's very common for these tests\n  to contain scripts and use variables to store state between requests.  It's also very common for\n  this folder to contain many sub-folders for different test runs.  When using the Newman command-line\n  tool, you can choose to run a specific sub-folder within this folder.\n\n- requests:\n  This is a catch-all folder for any type of request, or for requests that don't belong in one\n  of the other folders.  For example, this is a good place to save requests that you use frequently\n  during debugging or development of your API.",
-      "type": "object",
-      "required": [
-        "items"
-      ],
-      "properties": {
-        "description": {
-          "type": "string",
-          "minLength": 0,
-          "description": "A description of the folder. This field supports markdown syntax to better format the description.\n"
-        },
-        "items": {
-          "$ref": "#/definitions/Items",
-          "description": "The contents of the folder. This can include HTTP requsts, as well as other folders."
-        }
-      },
-      "patternProperties": {
-        "^_": {
-          "$ref": "#/definitions/Types/definitions/AnyType"
-        }
-      },
-      "additionalProperties": false
-    },
-    "UserFolder": {
-      "title": "User Folder",
-      "description": "A folder can contain one or more HTTP requests, in a specific order.\nIt can also contain other folders, allowing for an infinitely-deep level of nesting.",
+    "Folder": {
+      "title": "Folder",
+      "description": "A folder can contain one or more HTTP requests, in a specific order.\nIt can also contain other folders, allowing for an infinitely-deep level of nesting.\n\nThe Postman Collection Format defines a few special folders that have explicit purposes:\n\n- examples:\n  This folder is for requests that are meant to be examples of how to use your API. They will usually\n  contain sample data, populated headers, and often even saved responses.  These requests usually\n  don't have any scripts.\n\n- tests:\n  This folder is for requests that are meant to test specific functionality of your API.  This can\n  include end-to-end tests, smoke tests, uptime monitoring, etc.  It's very common for these tests\n  to contain scripts and use variables to store state between requests.  It's also very common for\n  this folder to contain many sub-folders for different test runs.  When using the Newman command-line\n  tool, you can choose to run a specific sub-folder within this folder.\n\n- requests:\n  This is a catch-all folder for any type of request, or for requests that don't belong in one\n  of the other folders.  For example, this is a good place to save requests that you use frequently\n  during debugging or development of your API.",
       "type": "object",
       "required": [
         "name",
@@ -233,8 +208,7 @@
           "description": "A description of the folder. This field supports markdown syntax to better format the description.\n"
         },
         "items": {
-          "$ref": "#/definitions/Items",
-          "description": "The contents of the folder. This can include HTTP requsts, as well as other folders."
+          "$ref": "#/definitions/Items"
         }
       },
       "patternProperties": {
@@ -248,17 +222,47 @@
       "title": "Items",
       "description": "An array of requests and folders, in a specific order",
       "type": "array",
+      "minItems": 0,
       "items": {
         "oneOf": [
           {
-            "$ref": "#/definitions/UserFolder"
+            "$ref": "#/definitions/Items/definitions/RequestItem"
           },
           {
-            "$ref": "#/definitions/Request"
+            "$ref": "#/definitions/Items/definitions/FolderItem"
           }
         ]
       },
-      "minItems": 0
+      "definitions": {
+        "RequestItem": {
+          "type": "object",
+          "properties": {
+            "request": {
+              "$ref": "#/definitions/Request"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        },
+        "FolderItem": {
+          "type": "object",
+          "properties": {
+            "folder": {
+              "$ref": "#/definitions/Folder"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
     },
     "Request": {
       "title": "Postman Request",
@@ -302,36 +306,11 @@
         "body": {
           "$ref": "#/definitions/Request/definitions/RequestBody"
         },
-        "responses": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Response"
-          },
-          "minItems": 0,
-          "description": "You can store multiple responses for a single request"
-        },
         "events": {
-          "type": "object",
-          "properties": {
-            "onRequest": {
-              "$ref": "#/definitions/Scripting/definitions/EventHandler",
-              "description": "This event fires when the request is about to be sent.  It's a good opportunity to populate environment variables that are needed by the request."
-            },
-            "onResponse": {
-              "$ref": "#/definitions/Scripting/definitions/EventHandler",
-              "description": "This event fires when the response is received.  It's a good opportunity to save parts of the response as environment variables, or to manipulate the response to prepare it for the `onTest` event."
-            },
-            "onTest": {
-              "$ref": "#/definitions/Scripting/definitions/EventHandler",
-              "description": "This event fires after the `onResponse` event.  This is where you should make assertions on the response. You can set properties of the `tests` object to indicate test passed or failed tests (e.g. `tests.hasUsername = JSON.parse(responseBody).username.length > 0`)."
-            }
-          },
-          "patternProperties": {
-            "^_": {
-              "$ref": "#/definitions/Types/definitions/AnyType"
-            }
-          },
-          "additionalProperties": false
+          "$ref": "#/definitions/Request/definitions/Events"
+        },
+        "responses": {
+          "$ref": "#/definitions/Request/definitions/Responses"
         }
       },
       "patternProperties": {
@@ -466,6 +445,48 @@
             }
           },
           "additionalProperties": false
+        },
+        "Events": {
+          "type": "object",
+          "properties": {
+            "onRequest": {
+              "$ref": "#/definitions/Scripting/definitions/EventHandler",
+              "description": "This event fires when the request is about to be sent.  It's a good opportunity to populate environment variables that are needed by the request."
+            },
+            "onResponse": {
+              "$ref": "#/definitions/Scripting/definitions/EventHandler",
+              "description": "This event fires when the response is received.  It's a good opportunity to save parts of the response as environment variables, or to manipulate the response to prepare it for the `onTest` event."
+            },
+            "onTest": {
+              "$ref": "#/definitions/Scripting/definitions/EventHandler",
+              "description": "This event fires after the `onResponse` event.  This is where you should make assertions on the response. You can set properties of the `tests` object to indicate test passed or failed tests (e.g. `tests.hasUsername = JSON.parse(responseBody).username.length > 0`)."
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        },
+        "Responses": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "properties": {
+              "response": {
+                "$ref": "#/definitions/Response"
+              }
+            },
+            "patternProperties": {
+              "^_": {
+                "$ref": "#/definitions/Types/definitions/AnyType"
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": "Postman allows you to store multiple responses for a request.  This is useful for example requests, so you can include examples of different possible responses.  It's also useful for debugging purposes, where you may want to save multiple responses for reference purposes."
         }
       }
     },
@@ -473,6 +494,9 @@
       "title": "Response",
       "description": "Contains a full HTTP response, include status code, headers, cookies, and response body",
       "type": "object",
+      "required": [
+        "status"
+      ],
       "properties": {
         "name": {
           "type": "string",

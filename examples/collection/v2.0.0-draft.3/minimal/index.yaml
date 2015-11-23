@@ -10,6 +10,6 @@
 # case you will end up setting several different properties.  Postman and Newman are smart enough to
 # know which parts of the collection are for which purposes, so you don't need to worry about your
 # "examples" requests accidentally getting run as part of your test suite.
-postman: 2.0
+postman: '2.0'
 info:
   name: My Collection

@@ -85,12 +85,19 @@ function validate(globs, options) {
  */
 function bundle(globs, options) {
   var files;
-  var method = options.validate ? 'validate' : 'bundle';
 
   expandGlobs(globs)
     .then(function(results) {
       files = results;
-      return PostmanCollection[method](files, {bail: options.bail});
+
+      if (options.validate) {
+        // Validate the collection(s) first
+        return PostmanCollection.validate(files, {bail: options.bail});
+      }
+    })
+    .then(function() {
+      // Bundle the collection(s)
+      return PostmanCollection.bundle(files, {bail: options.bail});
     })
     .then(function(results) {
       if (options.out) {

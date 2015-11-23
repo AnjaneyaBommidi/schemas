@@ -1,0 +1,70 @@
+info:
+  name: User Profile API
+
+variables:
+  Server: http://localhost                                      # <-- String variable
+  Port: 3000                                                    # <-- Number variable
+  Session: null                                                 # <-- Null variable
+  User:                                                         # <-- Object variable
+    name:                                                       # <-- Nested object inside the "User" variable
+      first: John
+      last: Doe
+    username: jdoe
+    password: ilovepuppies
+
+requests:
+  items:
+    - name: Login
+      description: You have to login before you can access your profile page
+      method: PUT
+      url: "{{Server}}:{{Port}}/users/session"                  # <-- Variables can be used in the request URL
+      body:
+        mode: urlencoded
+        fields:
+          username: "{{User.username}}"                         # <-- Variables can be used in form data
+          password: "{{User.password}}"
+
+
+    - name: View your profile
+      method: GET
+      url: "{{Server}}:{{Port}}/users/{{User.username}}"
+      headers:
+        Accept: text/html
+        If-Modified-Since: Sat, 29 Oct 1994 19:43:31 GMT
+        "{{Session.tokenName}}": "{{Session.tokenValue}}"       # <-- Variables can be used in request headers
+
+
+    - name: Profile tasks
+      items:
+        - name: Change your password
+          method: PATCH
+          url: "{{Server}}:{{Port}}/users/{{User.username}}/password"
+          headers:
+            Content-Type: application/json
+          cookies:
+            "{{Session.tokenName}}":                            # <-- Variables can be used in cookie names
+              value: "{{Session.tokenValue}}"                   # <-- Variables can be used in cookie values
+              secure: true
+              httpOnly: true
+              domain: "{{Server}}"                              # <-- Variables can be used in cookie properties
+            ga: GOOG_Analytics_token
+          body:
+            mode: raw
+            content:
+              oldPassword: "{{User.password}}"                  # <-- Variables can be used in a JSON request body
+              newPassword: ilovekittens
+
+
+        - name: Edit your profile
+          method: PUT
+          url: "{{Server}}:{{Port}}/users/{{User.username}}"
+          headers:
+            Content-Type: application/json
+          body:
+            mode: raw
+            content: "{{User}}"                                 # <-- Variables can be used in a raw request body
+
+
+        - name: Log out
+          method: DELETE
+          url: "{{Server}}:{{Port}}/users/{{User.username}}/session"

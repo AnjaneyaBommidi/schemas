@@ -1,0 +1,4 @@
+name: Favorite colors
+description: Returns your favorite colors
+method: GET
+url: http://www.myfavoritethings.com/colors

@@ -1,0 +1,50 @@
+# Postman Collections are parsed as YAML, which is a superset of JSON.
+# Any valid JSON file is ALSO a valid YAML file, so you can use whichever format you prefer.
+# Because JSON files will be parsed as YAML, you can also include comments in your JSON files.
+# Just be sure you use the "#" character for comments, rather than "//" or "/* */".
+{
+  "info": {
+    "author": {
+      "url": "http://www.myfavoritethings.com",
+      "name": "John Doe"
+    },
+    "version": "1.0.0-alpha.1",
+    "description": "This API lets you keep track of your favorite things. Whether it's your favorite sports teams, your favorite holidays, or even your favorite colors.",
+    "name": "My Favorite Things"
+  },
+  "requests": {
+    "items": [
+      # You can reference other JSON files via the JSON Schema `$ref` keyword
+      # These files will be parsed as YAML too, so they can also contain comments
+      {"$ref": "request-1.json"},
+
+      # You can even mix-and-match YAML and JSON files.
+      # Any files referenced via `$ref` will be parsed as YAML, which means they can be YAML or JSON
+      {"$ref": "request-2.yml"},
+
+      # This request has an event script, which is a JavaScript string.
+      # Unfortunately, JSON formatting makes the script very difficult to read
+      {
+        "name": "Favorite people",
+        "description": "Returns your favorite people",
+        "url": "http://www.myfavoritethings.com/people",
+        "method": "GET",
+        "events": {
+          "onResponse": "var favorites = JSON.parse(responseBody);\nif (favorites.length > 0) {\n  postman.setEnvironmentVariable('my_favorites', favorites);\n}"
+        }
+      },
+
+      # Fortunately, you can use `$ref` to reference _any_ external file, even a JavaScript file!
+      # So we can write our script in an external file that's much easier to read and write
+      {
+        "name": "Favorite people",
+        "description": "Returns your favorite people",
+        "url": "http://www.myfavoritethings.com/people",
+        "method": "GET",
+        "events": {
+          "onResponse": {"$ref": "script.js"}
+        }
+      }
+    ]
+  }
+}

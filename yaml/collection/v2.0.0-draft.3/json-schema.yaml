@@ -1,6 +1,6 @@
 title: JSON Schema
 description: >-
-  A JSON Schema object, which allows the user to define any data type, including primitives, objects,
+  A full JSON Schema, which allows the user to define any data type, including primitives, objects,
   arrays, enumerations, etc.  They can also use "allOf", "anyOf", "oneOf", and "not" to create
   derived types, compound types, etc.
 type: object
@@ -29,7 +29,7 @@ properties:
         minItems: 1
         uniqueItems: true
   default:
-    $ref: "#/definitions/AnyType"
+    $ref: types.yaml#/definitions/AnyType
   minimum:
     type: number
   maximum:
@@ -45,16 +45,16 @@ properties:
     minimum: 0
     exclusiveMinimum: true
   maxLength:
-    $ref: "#/definitions/PositiveInteger"
+    $ref: types.yaml#/definitions/PositiveInteger
   minLength:
-    $ref: "#/definitions/PositiveIntegerDefault0"
+    $ref: types.yaml#/definitions/PositiveIntegerDefault0
   pattern:
     type: string
     format: regex
   enum:
     type: array
     items:
-      $ref: "#/definitions/AnyType"
+      $ref: types.yaml#/definitions/AnyType
     minItems: 1
     uniqueItems: true
   items:
@@ -68,36 +68,36 @@ properties:
       - $ref: "#"
     default: {}
   maxItems:
-    $ref: "#/definitions/PositiveInteger"
+    $ref: types.yaml#/definitions/PositiveInteger
   minItems:
-    $ref: "#/definitions/PositiveIntegerDefault0"
+    $ref: types.yaml#/definitions/PositiveIntegerDefault0
   uniqueItems:
     type: boolean
     default: false
   maxProperties:
-    $ref: "#/definitions/PositiveInteger"
+    $ref: types.yaml#/definitions/PositiveInteger
   minProperties:
-    $ref: "#/definitions/PositiveIntegerDefault0"
+    $ref: types.yaml#/definitions/PositiveIntegerDefault0
   required:
-    $ref: "#/definitions/StringArray"
+    $ref: types.yaml#/definitions/StringArray
   properties:
-    $ref: "#/definitions/Object"
+    $ref: "#/definitions/SchemaMap"
   patternProperties:
-    $ref: "#/definitions/Object"
+    $ref: "#/definitions/SchemaMap"
   additionalProperties:
     anyOf:
       - type: boolean
       - $ref: "#"
     default: {}
   definitions:
-    $ref: "#/definitions/Object"
+    $ref: "#/definitions/SchemaMap"
   dependencies:
     type: object
     patternProperties:
       ".*":
         anyOf:
           - $ref: "#"
-          - $ref: "#/definitions/StringArray"
+          - $ref: types.yaml#/definitions/StringArray
   allOf:
     $ref: "#/definitions/SchemaArray"
   anyOf:
@@ -108,7 +108,7 @@ properties:
     $ref: "#"
 patternProperties:
   "^_":
-    $ref: "#/definitions/AnyType"
+    $ref: types.yaml#/definitions/AnyType
 additionalProperties: false
 
 dependencies:
@@ -123,28 +123,7 @@ definitions:
     items:
       $ref: "#"
 
-  PositiveInteger:
-    type: integer
-    minimum: 0
-
-  PositiveIntegerDefault0:
-    type: integer
-    minimum: 0
-    default: 0
-
-  TypeName:
-    type: string
-    enum: ["array", "boolean", "integer", "null", "number", "object", "string"]
-
-  StringArray:
-    type: array
-    items:
-      type: string
-      minLength: 0
-    minItems: 1
-    uniqueItems: true
-
-  Object:
+  SchemaMap:
     type: object
     patternProperties:
       ".*":
@@ -153,23 +132,6 @@ definitions:
       $ref: "#"
     default: {}
 
-  AnyType:
-    type: ["array", "boolean", "integer", "null", "number", "object", "string"]
-
-    # for numbers
-    minimum: 5.e-324
-
-    # for strings
-    minLength: 0
-
-    # for objects
-    additionalProperties: true
-    patternProperties:
-      ".*":
-        $ref: "#/definitions/AnyType"
-
-    # for arrays
-    items:
-      $ref: "#/definitions/AnyType"
-    minItems: 0
-    additionalItems: true
+  TypeName:
+    type: string
+    enum: ["array", "boolean", "integer", "null", "number", "object", "string"]

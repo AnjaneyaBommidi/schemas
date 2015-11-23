@@ -1,0 +1,87 @@
+# This collection demonstrates how scripts work in Postman Collection Format v2.
+#
+# Postman Collections can be written in YAML or JSON.  YAML tends to be more human-readable
+# (and writable) than JSON.  This is especially true for scripts, since JSON doesn't have
+# a multi-line string syntax, but YAML does.
+#
+# If you prefer to use JSON instead of YAML, then you're still not out of luck.  You can use
+# JSON Schema $ref pointers to reference external JavaScript files, and Postman will automatically
+# read the scripts from those files.  See the "json-and-yaml" sample for details.
+#
+info:
+  name: My Favorite Things
+
+# Global scripts
+scripts:
+  # This is the simplest type of script.
+  # It returns a value, which will be stored in a global variable named `strUtils`
+  strUtils: >-
+    // String utility functions
+    return {
+      startsWith: function(str, val) {
+        return str.indexOf(val) === 0;
+      },
+      endsWith: function(str, val) {
+        return str.substr(-val.length) === val;
+      },
+    };
+
+  # This is another simple script, but this one does NOT return a value.
+  # Instead, it creates a global variable named `numUtils`.
+  # In this case, the script name ("fooBar") is irrelevant.
+  fooBar: >-
+    // Number utility functions
+    window.numUtils {
+      isPositive: function(num) {
+        return num > 0;
+      },
+      isNegative: function(num) {
+        return num < 0;
+      }
+    };
+
+  # This is another simple script, but rather than embedding it inline,
+  # it is referenced from an external file.  This script uses the CommonJS
+  # module pattern, so its exports will be available on the global variable `dateUtils`
+  dateUtils:
+    $ref: date-utils.js
+
+  # This is another reference to an external file,
+  # but this time it's a locally-installed Node module
+  lodash:
+    $ref: ../../../../../node_modules/lodash/index.js
+
+  # And here's an external reference to a URL.
+  jQuery:
+    $ref: https://code.jquery.com/jquery-2.1.4.min.js
+
+requests:
+  items:
+    - description: Returns your favorite things for the given category
+      url: http://www.myfavoritethings.com/{{Category}}
+      method: GET
+      events:
+        # Event handlers are just like scripts, but instead of being global and reusable,
+        # they are intended to be single-purpose.  In this case, the event handler sets
+        # the {{Category}} variable, which is needed by the request
+        onRequest: |-
+          var category = postman.getEnvironmentVariable('Category');
+          if (!category) {
+            // By default, return your favorite colors
+            postman.setEnvironmentVariable('Category', 'colors');
+          }
+
+        # This is a response event handler, which runs as soon as the response comes back,
+        # but BEFORE any tests run.  This is a good time to set variables based on the response.
+        onResponse: |-
+          var favorites = JSON.parse(responseBody);
+          if (favorites.length > 0) {
+            postman.setEnvironmentVariable('my_favorites', favorites);
+          }
+
+        # This is a test script.  It performs assertions on the response to make sure
+        # the API is behaving properly
+        onTest: |-
+          tests['Status code is 200'] = responseCode.code === 200;
+          tests['Content-Type header is set'] = !!postman.getResponseHeader('Content-Type');
+

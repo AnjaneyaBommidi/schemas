@@ -1,6 +1,4 @@
-# HACK: Comment-out the following line because the JSON Schema v4 draft doesn't pass Z-Schema's strict validation mode
-# $schema: 'http://json-schema.org/draft-04/schema#'
-# id: 'http://schema.getpostman.com/json/collection/v2.0.0-draft.2/'
+id: http://schema.getpostman.com/json/collection/v2.0.0-draft.3/
 title: Postman Collection Format v2.0
 type: object
 required:
@@ -10,18 +8,18 @@ properties:
     $ref: "#/definitions/Info"
   variables:
     $ref: "#/definitions/Variables"
+  requests:
+    $ref: "#/definitions/SpecialFolder"
   examples:
     $ref: "#/definitions/SpecialFolder"
   tests:
     $ref: "#/definitions/SpecialFolder"
-  requests:
-    $ref: "#/definitions/SpecialFolder"
-#  scripts:
-#    $ref: scripts.yaml
+  scripts:
+    $ref: "#/definitions/Scripting/definitions/Scripts"
 
 patternProperties:
   "^_":
-    $ref: json-schema.yaml#/definitions/AnyType
+    $ref: types.yaml#/definitions/AnyType
 additionalProperties: false
 
 definitions:
@@ -29,9 +27,21 @@ definitions:
     $ref: info.yaml
   Variables:
     $ref: variables.yaml
+  Version:
+    $ref: version.yaml
   SpecialFolder:
     $ref: special-folder.yaml
-#  Scripts:
-#    $ref: scripts.yaml
-  JsonSchema:
-    $ref: json-schema.yaml
+  Folder:
+    $ref: folder.yaml
+  Items:
+    $ref: items.yaml
+  Request:
+    $ref: request.yaml
+  Response:
+    $ref: response.yaml
+  Cookies:
+    $ref: cookies.yaml
+  Types:
+    $ref: types.yaml
+  Scripting:
+    $ref: scripting.yaml

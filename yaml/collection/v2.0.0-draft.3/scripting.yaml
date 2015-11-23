@@ -1,0 +1,52 @@
+title: Scripting
+description: >-
+  Postman Collections can contain JavaScript code that runs when certain events occur.
+  Your scripts can also reference external dependencies, such as Node modules, Bower packages,
+  jQuery plug-ins, etc.
+type: "null"
+definitions:
+  EventHandler:
+    $ref: "#/definitions/Script"
+    description: >-
+      Event handlers are a special type of script that responds to a specific event.  Whereas normal
+      scripts are meant to be reusable and general-purpose, event handlers are meant to be written
+      for a specific event and request.
+      At some point in the future, event handlers may be able to accept parameters and return results.
+
+  Scripts:
+    type: object
+    description: |-
+      These top-level scripts are accessible to all other scripts in the collection.
+      This is a great place to define classes, utility functions, global objects, and
+      other general-purpose, reusable code.
+
+      Scripts that return a value, or which contain AMD or CommonJS modules, will be exported
+      as global variables with the same name as the script.
+    patternProperties:
+      "^\\w+":
+        $ref: "#/definitions/Script"
+      "^_":
+        $ref: types.yaml#/definitions/AnyType
+    additionalProperties: false
+
+  Script:
+    type: string
+    minLength: 0
+    description: |-
+      A script is just a string containing JavaScript code, but because Postman Collection Format
+      is built on top of JSON Schema, you can take advantage of the `$ref` keyword to reference
+      external JavaScript files and URLs.
+
+      Scripts can export values (such as classes, functions, objects, etc.) in several different ways:
+
+      - Modules:
+        Postman supports AMD and CommonJS module formats. The module exports will be available to
+        your scripts as a global variable.  The variable name is the same as the key on the `Scripts` object.
+
+      - Return values:
+        If the script returns a value, then that value is treated exactly like a module export
+        as described above.
+
+      - Globals:
+        Scripts can defien global variables directly by assigning properties to the `window` or `global`
+        objects. (e.g. `window.myVar = "hello world"`)

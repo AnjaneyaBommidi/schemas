@@ -7,7 +7,6 @@ properties:
   name:
     type: string
     minLength: 1
-    title: Name of the collection
     description: >-
       A collection's friendly name is defined by this field.
       You would want to set this field to a value that would allow you to easily identify this
@@ -15,13 +14,48 @@ properties:
   description:
     type: string
     minLength: 0
-    title: Description of the collection
     description: >-
       Provide a long description of this collection using this field.
       This field supports markdown syntax to better format the description.
   version:
     $ref: version.yaml
+  author:
+    oneOf:
+      - $ref: "#/definitions/AuthorString"
+      - $ref: "#/definitions/AuthorObject"
 patternProperties:
   "^_":
-    $ref: json-schema.yaml#/definitions/AnyType
+    $ref: types.yaml#/definitions/AnyType
 additionalProperties: false
+
+definitions:
+  AuthorString:
+    type: string
+    minLength: 0
+    description: >
+      The person who created the collection, or the contact person for the collection.
+      This is a free-form text field
+
+  AuthorObject:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        minLength: 1
+        description: The contact person (or company) for the API
+      email:
+        type: string
+        format: email
+        minLength: 0
+        description: The email address at which the author may be concated (perhaps for support)
+      url:
+        type: string
+        format: uri
+        minLength: 0
+        description: The author's website, or a website where you can find more information about the API
+    patternProperties:
+      "^_":
+        $ref: types.yaml#/definitions/AnyType
+    additionalProperties: false

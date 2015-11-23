@@ -1,0 +1,55 @@
+title: Response
+description: >-
+  Contains a full HTTP response, include status code, headers, cookies, and response body
+type: object
+properties:
+  name:
+    type: string
+    minLength: 1
+    description: A friendly name can be added to each response
+  description:
+    type: string
+    minLength: 0
+    description: >
+      A description of the response. This field supports markdown syntax to better format the description.
+  time:
+    type: number
+    minimum: 0
+    description: The time taken to complete the request (in milliseconds)
+  status:
+    $ref: "#/definitions/ResponseStatus"
+  headers:
+    $ref: types.yaml#/definitions/StringMap
+    description: The HTTP response headers, as set of name/value pairs.
+  cookies:
+    $ref: cookies.yaml
+    description: A structured version of the "Set-Cookie" response header
+  body:
+    $ref: types.yaml#/definitions/EncodedString
+    description: >-
+      The response body (if any) will be encoded ASCII text. This can include plain text, HTML,
+      JSON, XML, or even encoded binary data (such as an image, audio file, etc.).
+      The `Content-Type` and `Content-Encoding` headers determine the content type and the encoding.
+patternProperties:
+  "^_":
+    $ref: types.yaml#/definitions/AnyType
+additionalProperties: false
+
+definitions:
+  ResponseStatus:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: integer
+        minimum: 0
+        description: The response status code (e.g. 200, 404, 500, etc.)
+      text:
+        type: string
+        minLength: 0
+        description: The response status text that corresponds to the
+    patternProperties:
+      "^_":
+        $ref: types.yaml#/definitions/AnyType
+    additionalProperties: false

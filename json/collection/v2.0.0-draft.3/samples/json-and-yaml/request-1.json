@@ -1,0 +1,9 @@
+{
+  #
+  # This JSON file can also contain YAML comments, just like the main index.json file
+  #
+  "name": "Favorite animals",
+  "description": "Returns your favorite animals",
+  "method": "GET",
+  "url": "http://www.myfavoritethings.com/animals"
+}

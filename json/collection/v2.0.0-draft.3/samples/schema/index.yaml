@@ -1,0 +1,10 @@
+info:
+  name: My Favorite Things
+  version: 1.0.0-alpha.1
+  author:
+    name: John Doe
+    url: http://www.myfavoritethings.com
+  description: >-
+    This API lets you keep track of your favorite things.
+    Whether it's your favorite sports teams,
+    your favorite holidays, or even your favorite colors.

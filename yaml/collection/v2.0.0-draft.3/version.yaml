@@ -47,5 +47,5 @@ definitions:
           A human friendly ideantifier to make sense of the version numbers. E.g: 'beta-3'
     patternProperties:
       "^_":
-        $ref: json-schema.yaml#/definitions/AnyType
+        $ref: types.yaml#/definitions/AnyType
     additionalProperties: false

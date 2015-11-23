@@ -79,10 +79,8 @@ definitions:
               type: string
             description:
               type: string
-      fragment:
-        description: 'Contains the URL fragment (if any). Usually this is not transmitted over the network, but it could be useful to store this in some cases.'
-        type: string
+
     patternProperties:
       "^_":
-        $ref: json-schema.yaml#/definitions/AnyType
+        $ref: types.yaml#/definitions/AnyType
     additionalProperties: false

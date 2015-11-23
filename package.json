@@ -20,15 +20,11 @@
   "bin": {
     "postman-collection": "./bin/postman-collection.js"
   },
-  "engines": {
-    "npm": ">=3.0",
-    "node": ">=4.0"
-  },
   "scripts": {
     "start": "bin/postman-collection.js validate json/collection/v2.0.0-draft.3/samples/**/index.*",
-    "test": "npm run bundle && npm run validate && npm start",
-    "bundle": "cd yaml && node ../bin/postman-collection.js bundle --no-validate --out ../json collection/v2.0.0-draft.3/index.yaml",
-    "validate": "z-schema json/collection/v2.0.0-draft.3/index.json --pedanticCheck --forceAdditional --forceItems --forceMinItems --forceMinLength --forceProperties --noExtraKeywords --noTypeless --strictUris"
+    "test": "npm run build-schema && npm run validate-schema && npm start",
+    "build-schema": "cd yaml && node ../bin/postman-collection.js bundle --no-validate --out ../json collection/v2.0.0-draft.3/index.yaml",
+    "validate-schema": "z-schema json/collection/v2.0.0-draft.3/index.json --pedanticCheck --forceAdditional --forceItems --forceMinItems --forceMinLength --forceProperties --noExtraKeywords --noTypeless --strictUris"
   },
   "dependencies": {
     "call-me-maybe": "^1.0.1",
@@ -39,5 +35,8 @@
     "mkdirp": "^0.5.1",
     "ono": "^1.0.22",
     "z-schema": "^3.16.0"
+  },
+  "devDependencies": {
+    "lodash": "^3.10.1"
   }
 }

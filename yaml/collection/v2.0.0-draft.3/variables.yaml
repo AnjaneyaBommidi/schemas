@@ -14,12 +14,12 @@ patternProperties:
   # Variable names MUST begin with a letter, and can ONLY contain letters, numbers, and underscores.
   # Variable names CANNOT contain spaces or special characters.
   "^[a-zA-Z]\\w+$":
-    $ref: json-schema.yaml#/definitions/AnyType
+    $ref: types.yaml#/definitions/AnyType
 
   # Any properties beginning with an underscore ARE NOT variables. They are Collection metadata.
   # These properties can contain ANY characters, including spaces and special characters, as long
   # as the first character is an underscore
   "^_":
-    $ref: json-schema.yaml#/definitions/AnyType
+    $ref: types.yaml#/definitions/AnyType
 
 additionalProperties: false

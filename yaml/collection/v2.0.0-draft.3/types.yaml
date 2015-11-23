@@ -1,0 +1,125 @@
+title: Data Types
+description: Various data types that are reused throughouth the schema
+type: "null"
+definitions:
+  Byte:
+    type: integer
+    minimum: 0
+    maximum: 255
+
+  PositiveInteger:
+    type: integer
+    minimum: 0
+
+  PositiveIntegerDefault0:
+    type: integer
+    minimum: 0
+    default: 0
+
+  Date:
+    type:
+      - string  # ISO 8601 string
+      - object  # JavaScript Date object
+    format: date-time
+    properties:
+      "n/a":
+        type: "null"
+    additionalProperties: false
+
+  StringArray:
+    type: array
+    items:
+      type: string
+      minLength: 0
+    minItems: 1
+    uniqueItems: true
+
+  ByteArray:
+    type: array
+    items:
+      $ref: "#/definitions/Byte"
+    minItems: 0
+
+  Buffer:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [Buffer]
+      data:
+        $ref: "#/definitions/ByteArray"
+    additionalProperties: false
+
+  EncodedString:
+    description: >-
+      An encoded string (such as an HTTP request/response body).
+      It can be expressed as a string, a byte array, or a Buffer object.
+    oneOf:
+      - type: string
+        minLength: 0
+      - $ref: "#/definitions/ByteArray"
+      - $ref: "#/definitions/Buffer"
+
+  StringMap:
+    type: object
+    description: >-
+      An object whose properties must be strings.
+      If a property name begins with an underscore, then it is considered metadata, so it can be any type.
+    patternProperties:
+      ".*":
+        type: string
+        minLength: 0
+      "^_":
+        $ref: types.yaml#/definitions/AnyType
+    additionalProperties: false
+    default: {}
+
+  AnyType:
+    type: ["array", "boolean", "integer", "null", "number", "object", "string"]
+    # for numbers
+    minimum: 5.e-324
+    # for strings
+    minLength: 0
+    # for objects
+    additionalProperties: true
+    patternProperties:
+      ".*":
+        $ref: "#/definitions/AnyType"
+    # for arrays
+    items:
+      $ref: "#/definitions/AnyType"
+    minItems: 0
+    additionalItems: true
+
+  JsonSchema:
+    $ref: json-schema.yaml
+
+  JsonReference:
+    type: object
+    required:
+      - $ref
+    properties:
+      $ref:
+        type: string
+        minLength: 1
+    additionalProperties: true
+
+  HttpMethod:
+    type: string
+    minLength: 1
+    enum:
+      - GET
+      - PUT
+      - POST
+      - PATCH
+      - DELETE
+      - COPY
+      - HEAD
+      - OPTIONS
+      - LINK
+      - UNLINK
+      - PURGE
+      - LOCK
+      - UNLOCK
+      - PROPFIND
+      - VIEW

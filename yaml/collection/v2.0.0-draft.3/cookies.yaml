@@ -1,0 +1,60 @@
+title: Cookies
+type: object
+description: >-
+  Each key of this object is a cookie name,  and each value is the cookie's properties,
+  including its value, its expiration date, etc.  Any part of a cookie can contain variables in
+  double curly brackets (e.g. `{{Cookie_Name}}`)
+patternProperties:
+  ".+":
+    oneOf:
+      - $ref: "#/definitions/CookieString"
+      - $ref: "#/definitions/CookieObject"
+  "^_":
+    $ref: types.yaml#/definitions/AnyType
+additionalProperties: false
+
+definitions:
+  CookieString:
+    type: string
+    minLength: 0
+    description: >-
+      This is a shorthand notation for setting a cookie's value and accepting the default
+      values for all other properties (as defined by RFC 6265)
+
+  CookieObject:
+    type: object
+    required:
+      - value
+    properties:
+      value:
+        type: string
+        minLength: 0
+        description: The value that is stored in the cookie
+      domain:
+        type: string
+        minLength: 0
+        description: The domain (or subdomain) to which the cookie applies
+      path:
+        type: string
+        minLength: 0
+        description: The path to which the cookie applies
+      secure:
+        type: boolean
+        description: >-
+          Directs browsers to only transmit the cookie over secure/encrypted connections
+      httpOnly:
+        type: boolean
+        description: >-
+          Directs browsers to only expose the cookie through HTTP (and HTTPS) requests.
+          Cookies with this attribute are not accessible via non-HTTP methods, such as JavaScript
+          (using `document.cookie`), and therefore cannot be easily stolen via cross-site scripting
+      expires:
+        $ref: types.yaml#/definitions/Date
+        description: >-
+          The date that the cookie expires. We recommend that you use ISO-8601 format
+          (e.g. `2015-11-26T00:16:38.000Z`).  Postman will automatically convert it
+          to RFC 1123 format (e.g. `Sun, 26 Nov 2015 00:16:38 GMT`)
+    patternProperties:
+      "^_":
+        $ref: types.yaml#/definitions/AnyType
+    additionalProperties: false

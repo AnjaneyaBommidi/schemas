@@ -1,4 +1,5 @@
 {
+  "id": "http://schema.getpostman.com/json/collection/v2.0.0-draft.3/",
   "title": "Postman Collection Format v2.0",
   "type": "object",
   "required": [
@@ -11,19 +12,22 @@
     "variables": {
       "$ref": "#/definitions/Variables"
     },
+    "requests": {
+      "$ref": "#/definitions/SpecialFolder"
+    },
     "examples": {
       "$ref": "#/definitions/SpecialFolder"
     },
     "tests": {
       "$ref": "#/definitions/SpecialFolder"
     },
-    "requests": {
-      "$ref": "#/definitions/SpecialFolder"
+    "scripts": {
+      "$ref": "#/definitions/Scripting/definitions/Scripts"
     }
   },
   "patternProperties": {
     "^_": {
-      "$ref": "#/definitions/JsonSchema/definitions/AnyType"
+      "$ref": "#/definitions/Types/definitions/AnyType"
     }
   },
   "additionalProperties": false,
@@ -39,80 +43,71 @@
         "name": {
           "type": "string",
           "minLength": 1,
-          "title": "Name of the collection",
           "description": "A collection's friendly name is defined by this field. You would want to set this field to a value that would allow you to easily identify this collection among a bunch of other collections, as such outlining its usage or content."
         },
         "description": {
           "type": "string",
           "minLength": 0,
-          "title": "Description of the collection",
           "description": "Provide a long description of this collection using this field. This field supports markdown syntax to better format the description."
         },
         "version": {
-          "title": "Version",
-          "description": "A version number, either as a string or as an object",
+          "$ref": "#/definitions/Version"
+        },
+        "author": {
           "oneOf": [
             {
-              "$ref": "#/definitions/Info/properties/version/definitions/VersionString"
+              "$ref": "#/definitions/Info/definitions/AuthorString"
             },
             {
-              "$ref": "#/definitions/Info/properties/version/definitions/VersionObject"
+              "$ref": "#/definitions/Info/definitions/AuthorObject"
             }
-          ],
-          "definitions": {
-            "VersionString": {
-              "type": "string",
-              "minLength": 1,
-              "pattern": "\\d+(\\.\\d+){0,2}(-.*)",
-              "description": "A Semantic Versioniing (http://semver.org/) string"
-            },
-            "VersionObject": {
-              "type": "object",
-              "required": [
-                "major"
-              ],
-              "description": "Postman allows you to version your collections as they grow, and this field holds the version number. While optional, it is recommended that you use this field to its fullest extent!",
-              "additionalProperties": false,
-              "properties": {
-                "major": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "description": "Increment this number if you make changes to the collection that changes its behaviour. E.g: Removing or adding new test scripts. (partly or completely)."
-                },
-                "minor": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "default": 0,
-                  "description": "You should increment this number if you make changes that will not break anything that uses the collection. E.g: removing a folder."
-                },
-                "patch": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "default": 0,
-                  "description": "Ideally, minor changes to a collection should result in the increment of this number."
-                },
-                "identifier": {
-                  "type": "string",
-                  "minLength": 0,
-                  "maxLength": 10,
-                  "description": "A human friendly ideantifier to make sense of the version numbers. E.g: 'beta-3'"
-                }
-              },
-              "patternProperties": {
-                "^_": {
-                  "$ref": "#/definitions/JsonSchema/definitions/AnyType"
-                }
-              }
-            }
-          }
+          ]
         }
       },
       "patternProperties": {
         "^_": {
-          "$ref": "#/definitions/JsonSchema/definitions/AnyType"
+          "$ref": "#/definitions/Types/definitions/AnyType"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "definitions": {
+        "AuthorString": {
+          "type": "string",
+          "minLength": 0,
+          "description": "The person who created the collection, or the contact person for the collection. This is a free-form text field\n"
+        },
+        "AuthorObject": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The contact person (or company) for the API"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "minLength": 0,
+              "description": "The email address at which the author may be concated (perhaps for support)"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "minLength": 0,
+              "description": "The author's website, or a website where you can find more information about the API"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
     },
     "Variables": {
       "title": "Variables",
@@ -120,13 +115,71 @@
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z]\\w+$": {
-          "$ref": "#/definitions/JsonSchema/definitions/AnyType"
+          "$ref": "#/definitions/Types/definitions/AnyType"
         },
         "^_": {
-          "$ref": "#/definitions/JsonSchema/definitions/AnyType"
+          "$ref": "#/definitions/Types/definitions/AnyType"
         }
       },
       "additionalProperties": false
+    },
+    "Version": {
+      "title": "Version",
+      "description": "A version number, either as a string or as an object",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Version/definitions/VersionString"
+        },
+        {
+          "$ref": "#/definitions/Version/definitions/VersionObject"
+        }
+      ],
+      "definitions": {
+        "VersionString": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\d+(\\.\\d+){0,2}(-.*)",
+          "description": "A Semantic Versioniing (http://semver.org/) string"
+        },
+        "VersionObject": {
+          "type": "object",
+          "required": [
+            "major"
+          ],
+          "description": "Postman allows you to version your collections as they grow, and this field holds the version number. While optional, it is recommended that you use this field to its fullest extent!",
+          "additionalProperties": false,
+          "properties": {
+            "major": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Increment this number if you make changes to the collection that changes its behaviour. E.g: Removing or adding new test scripts. (partly or completely)."
+            },
+            "minor": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "You should increment this number if you make changes that will not break anything that uses the collection. E.g: removing a folder."
+            },
+            "patch": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "Ideally, minor changes to a collection should result in the increment of this number."
+            },
+            "identifier": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 10,
+              "description": "A human friendly ideantifier to make sense of the version numbers. E.g: 'beta-3'"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          }
+        }
+      }
     },
     "SpecialFolder": {
       "title": "Special Folder",
@@ -142,297 +195,420 @@
           "description": "A description of the folder. This field supports markdown syntax to better format the description.\n"
         },
         "items": {
-          "title": "Items",
-          "description": "An array of requests and folders, in a specific order",
-          "type": "array",
-          "items": {
-            "oneOf": [
-              {
-                "title": "Folder",
-                "description": "A folder can contain one or more HTTP requests, in a specific order.\nIt can also contain other folders, allowing for an infinitely-deep level of nesting.",
-                "type": "object",
-                "required": [
-                  "name",
-                  "items"
-                ],
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "minLength": 1,
-                    "description": "The folder name"
-                  },
-                  "description": {
-                    "type": "string",
-                    "minLength": 0,
-                    "description": "A description of the folder. This field supports markdown syntax to better format the description.\n"
-                  },
-                  "items": {
-                    "$ref": "#/definitions/SpecialFolder/properties/items",
-                    "description": "The contents of the folder. This can include HTTP requsts, as well as other folders."
-                  }
-                },
-                "patternProperties": {
-                  "^_": {
-                    "$ref": "#/definitions/JsonSchema/definitions/AnyType"
-                  }
-                },
-                "additionalProperties": false
-              },
-              {
-                "title": "Postman Request",
-                "description": "Contains a full HTTP request, including headers, form fields, request body, and possibly one or more responses.",
-                "type": "object",
-                "required": [
-                  "method",
-                  "url"
-                ],
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "minLength": 1,
-                    "description": "A friendly name can be added to each request"
-                  },
-                  "description": {
-                    "type": "string",
-                    "minLength": 0,
-                    "description": "A description of the request. This field supports markdown syntax to better format the description.\n"
-                  },
-                  "url": {
-                    "type": "string",
-                    "minLength": 0,
-                    "description": "The request URL (e.g. \"http://company.com/api/v1/users?username=jdoe\"). You can use variables in double curly brackets anywhere in the URL string (e.g. `{{protocol}}://{{server_name}}:{{port_number}}/api/{{version_number}}/users?username={{user_name}}`).\n"
-                  },
-                  "method": {
-                    "type": "string",
-                    "minLength": 1,
-                    "description": "The HTTP method associated with this request",
-                    "enum": [
-                      "GET",
-                      "PUT",
-                      "POST",
-                      "PATCH",
-                      "DELETE",
-                      "COPY",
-                      "HEAD",
-                      "OPTIONS",
-                      "LINK",
-                      "UNLINK",
-                      "PURGE",
-                      "LOCK",
-                      "UNLOCK",
-                      "PROPFIND",
-                      "VIEW"
-                    ]
-                  }
-                },
-                "patternProperties": {
-                  "^_": {
-                    "$ref": "#/definitions/JsonSchema/definitions/AnyType"
-                  }
-                },
-                "additionalProperties": false
-              }
-            ]
-          },
-          "minItems": 0
+          "$ref": "#/definitions/Items",
+          "description": "The contents of the folder. This can include HTTP requsts, as well as other folders."
         }
       },
       "patternProperties": {
         "^_": {
-          "$ref": "#/definitions/JsonSchema/definitions/AnyType"
+          "$ref": "#/definitions/Types/definitions/AnyType"
         }
       },
       "additionalProperties": false
     },
-    "JsonSchema": {
-      "title": "JSON Schema",
-      "description": "A JSON Schema object, which allows the user to define any data type, including primitives, objects, arrays, enumerations, etc.  They can also use \"allOf\", \"anyOf\", \"oneOf\", and \"not\" to create derived types, compound types, etc.",
+    "Folder": {
+      "title": "Folder",
+      "description": "A folder can contain one or more HTTP requests, in a specific order.\nIt can also contain other folders, allowing for an infinitely-deep level of nesting.",
       "type": "object",
+      "required": [
+        "name",
+        "items"
+      ],
       "properties": {
-        "id": {
+        "name": {
           "type": "string",
-          "format": "uri",
-          "minLength": 0
-        },
-        "$schema": {
-          "type": "string",
-          "format": "uri",
-          "minLength": 0
-        },
-        "title": {
-          "type": "string",
-          "minLength": 0
+          "minLength": 1,
+          "description": "The folder name"
         },
         "description": {
           "type": "string",
-          "minLength": 0
-        },
-        "type": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/JsonSchema/definitions/TypeName"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/JsonSchema/definitions/TypeName"
-              },
-              "minItems": 1,
-              "uniqueItems": true
-            }
-          ]
-        },
-        "default": {
-          "$ref": "#/definitions/JsonSchema/definitions/AnyType"
-        },
-        "minimum": {
-          "type": "number"
-        },
-        "maximum": {
-          "type": "number"
-        },
-        "exclusiveMinimum": {
-          "type": "boolean",
-          "default": false
-        },
-        "exclusiveMaximum": {
-          "type": "boolean",
-          "default": false
-        },
-        "multipleOf": {
-          "type": "number",
-          "minimum": 0,
-          "exclusiveMinimum": true
-        },
-        "maxLength": {
-          "$ref": "#/definitions/JsonSchema/definitions/PositiveInteger"
-        },
-        "minLength": {
-          "$ref": "#/definitions/JsonSchema/definitions/PositiveIntegerDefault0"
-        },
-        "pattern": {
-          "type": "string",
-          "format": "regex"
-        },
-        "enum": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/JsonSchema/definitions/AnyType"
-          },
-          "minItems": 1,
-          "uniqueItems": true
+          "minLength": 0,
+          "description": "A description of the folder. This field supports markdown syntax to better format the description.\n"
         },
         "items": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/JsonSchema"
-            },
-            {
-              "$ref": "#/definitions/JsonSchema/definitions/SchemaArray"
-            }
-          ],
-          "default": {}
-        },
-        "additionalItems": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/JsonSchema"
-            }
-          ],
-          "default": {}
-        },
-        "maxItems": {
-          "$ref": "#/definitions/JsonSchema/definitions/PositiveInteger"
-        },
-        "minItems": {
-          "$ref": "#/definitions/JsonSchema/definitions/PositiveIntegerDefault0"
-        },
-        "uniqueItems": {
-          "type": "boolean",
-          "default": false
-        },
-        "maxProperties": {
-          "$ref": "#/definitions/JsonSchema/definitions/PositiveInteger"
-        },
-        "minProperties": {
-          "$ref": "#/definitions/JsonSchema/definitions/PositiveIntegerDefault0"
-        },
-        "required": {
-          "$ref": "#/definitions/JsonSchema/definitions/StringArray"
-        },
-        "properties": {
-          "$ref": "#/definitions/JsonSchema/definitions/Object"
-        },
-        "patternProperties": {
-          "$ref": "#/definitions/JsonSchema/definitions/Object"
-        },
-        "additionalProperties": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/JsonSchema"
-            }
-          ],
-          "default": {}
-        },
-        "definitions": {
-          "$ref": "#/definitions/JsonSchema/definitions/Object"
-        },
-        "dependencies": {
-          "type": "object",
-          "patternProperties": {
-            ".*": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/JsonSchema"
-                },
-                {
-                  "$ref": "#/definitions/JsonSchema/definitions/StringArray"
-                }
-              ]
-            }
-          }
-        },
-        "allOf": {
-          "$ref": "#/definitions/JsonSchema/definitions/SchemaArray"
-        },
-        "anyOf": {
-          "$ref": "#/definitions/JsonSchema/definitions/SchemaArray"
-        },
-        "oneOf": {
-          "$ref": "#/definitions/JsonSchema/definitions/SchemaArray"
-        },
-        "not": {
-          "$ref": "#/definitions/JsonSchema"
+          "$ref": "#/definitions/Items",
+          "description": "The contents of the folder. This can include HTTP requsts, as well as other folders."
         }
       },
       "patternProperties": {
         "^_": {
-          "$ref": "#/definitions/JsonSchema/definitions/AnyType"
+          "$ref": "#/definitions/Types/definitions/AnyType"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Items": {
+      "title": "Items",
+      "description": "An array of requests and folders, in a specific order",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/Folder"
+          },
+          {
+            "$ref": "#/definitions/Request"
+          }
+        ]
+      },
+      "minItems": 0
+    },
+    "Request": {
+      "title": "Postman Request",
+      "description": "Contains a full HTTP request, including headers, form fields, request body, and possibly one or more responses.",
+      "type": "object",
+      "required": [
+        "method",
+        "url"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A friendly name can be added to each request"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "description": "A description of the request. This field supports markdown syntax to better format the description.\n"
+        },
+        "variables": {
+          "$ref": "#/definitions/Variables"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 0,
+          "description": "The request URL (e.g. \"http://company.com/api/v1/users?username=jdoe\"). You can use variables in double curly brackets anywhere in the URL string (e.g. `{{protocol}}://{{server_name}}:{{port_number}}/api/{{version_number}}/users?username={{user_name}}`).\n"
+        },
+        "method": {
+          "$ref": "#/definitions/Types/definitions/HttpMethod",
+          "description": "The HTTP method associated with this request"
+        },
+        "headers": {
+          "$ref": "#/definitions/Types/definitions/StringMap",
+          "description": "The HTTP request headers, as set of name/value pairs. Each name and/or value can contain variable names in double curly brackets (e.g. `{{AUTH_HEADER_NAME}}`)\n"
+        },
+        "cookies": {
+          "$ref": "#/definitions/Cookies",
+          "description": "A structured version of the \"Cookie\" request header"
+        },
+        "body": {
+          "$ref": "#/definitions/Request/definitions/RequestBody"
+        },
+        "responses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Response"
+          },
+          "minItems": 0,
+          "description": "You can store multiple responses for a single request"
+        },
+        "events": {
+          "type": "object",
+          "properties": {
+            "onRequest": {
+              "$ref": "#/definitions/Scripting/definitions/EventHandler",
+              "description": "This event fires when the request is about to be sent.  It's a good opportunity to populate environment variables that are needed by the request."
+            },
+            "onResponse": {
+              "$ref": "#/definitions/Scripting/definitions/EventHandler",
+              "description": "This event fires when the response is received.  It's a good opportunity to save parts of the response as environment variables, or to manipulate the response to prepare it for the `onTest` event."
+            },
+            "onTest": {
+              "$ref": "#/definitions/Scripting/definitions/EventHandler",
+              "description": "This event fires after the `onResponse` event.  This is where you should make assertions on the response. You can set properties of the `tests` object to indicate test passed or failed tests (e.g. `tests.hasUsername = JSON.parse(responseBody).username.length > 0`)."
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^_": {
+          "$ref": "#/definitions/Types/definitions/AnyType"
         }
       },
       "additionalProperties": false,
-      "dependencies": {
-        "exclusiveMaximum": [
-          "maximum"
-        ],
-        "exclusiveMinimum": [
-          "minimum"
-        ]
-      },
-      "default": {},
       "definitions": {
-        "SchemaArray": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/JsonSchema"
-          }
+        "RequestBody": {
+          "description": "The HTTP request body.  Depending on the content-type, the body may be URL-encoded name/value pairs, multipart form data (fields and files), binary data (often base64-encoded), plain text, HTML, or any of a variety of data formats, such as as JSON, XML, CSV, SOAP, etc.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Request/definitions/UrlEncodedRequestBody"
+            },
+            {
+              "$ref": "#/definitions/Request/definitions/MultiPartRequestBody"
+            },
+            {
+              "$ref": "#/definitions/Request/definitions/RawRequestBody"
+            },
+            {
+              "$ref": "#/definitions/Request/definitions/BinaryRequestBody"
+            }
+          ]
+        },
+        "UrlEncodedRequestBody": {
+          "type": "object",
+          "description": "A `application/x-www-form-urlencoded` request body contains name/value pairs. Each name and value is a string consisting of ASCII characters (special characters are escaped or encoded). Each pair is delimited by an ampersand (\"&\"), and each name and value are separated by an equals sign (\"=\"). For example: `name=John+Doe&age=35&hairColor=brown`.",
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "urlencoded"
+              ]
+            },
+            "fields": {
+              "$ref": "#/definitions/Types/definitions/StringMap",
+              "description": "Field names or values can be contain variables in double curly brackets (e.g. `{{Some_Value}}`)"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        },
+        "MultiPartRequestBody": {
+          "type": "object",
+          "description": "A `multipart/form-data` request body contains name/value pairs, just like an `application/x-www-form-urlencoded` request body.  The difference is that urlencoded values are limited to strings of ASCII characters, whereas multipart values can contain non-ASCII characters and even encoded binary data.  Each name/value pair in a multipart request is sent as a separate \"part\" of the HTTP reqeust, and may contain its own HTTP headers, such as Content-Type, Content-Disposition, Content-Transfer-Encoding, etc.",
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "multipart"
+              ]
+            },
+            "fields": {
+              "$ref": "#/definitions/Types/definitions/StringMap",
+              "description": "Field names or values can be contain variables in double curly brackets (e.g. `{{Some_Value}}`)"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        },
+        "RawRequestBody": {
+          "type": "object",
+          "description": "A \"raw\" request body can contain plain text, HTML, CSV, JSON, XML, encoded binary data, or any other text-based content.  The destination server will determine the type of content based on HTTP headers, such as Content-Type, Content-Disposition, Content-Encoding, etc.",
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "raw"
+              ]
+            },
+            "content": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "This will be a string for most content types (plain text, HTML, CSV, XML, etc.), but for JSON content, you may specify an object, which will be serialized as JSON when the request is sent.\n",
+              "minLength": 0,
+              "patternProperties": {
+                ".*": {
+                  "$ref": "#/definitions/Types/definitions/AnyType"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        },
+        "BinaryRequestBody": {
+          "type": "object",
+          "description": "A \"binary\" request body is binary data (such as an image, audio file, etc.) that is encoded as ASCII text.  The Content-Encoding header determines the encoding type.",
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "binary"
+              ]
+            },
+            "content": {
+              "$ref": "#/definitions/Types/definitions/EncodedString"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "Response": {
+      "title": "Response",
+      "description": "Contains a full HTTP response, include status code, headers, cookies, and response body",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A friendly name can be added to each response"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "description": "A description of the response. This field supports markdown syntax to better format the description.\n"
+        },
+        "time": {
+          "type": "number",
+          "minimum": 0,
+          "description": "The time taken to complete the request (in milliseconds)"
+        },
+        "status": {
+          "$ref": "#/definitions/Response/definitions/ResponseStatus"
+        },
+        "headers": {
+          "$ref": "#/definitions/Types/definitions/StringMap",
+          "description": "The HTTP response headers, as set of name/value pairs."
+        },
+        "cookies": {
+          "$ref": "#/definitions/Cookies",
+          "description": "A structured version of the \"Set-Cookie\" response header"
+        },
+        "body": {
+          "$ref": "#/definitions/Types/definitions/EncodedString",
+          "description": "The response body (if any) will be encoded ASCII text. This can include plain text, HTML, JSON, XML, or even encoded binary data (such as an image, audio file, etc.). The `Content-Type` and `Content-Encoding` headers determine the content type and the encoding."
+        }
+      },
+      "patternProperties": {
+        "^_": {
+          "$ref": "#/definitions/Types/definitions/AnyType"
+        }
+      },
+      "additionalProperties": false,
+      "definitions": {
+        "ResponseStatus": {
+          "type": "object",
+          "required": [
+            "code"
+          ],
+          "properties": {
+            "code": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "The response status code (e.g. 200, 404, 500, etc.)"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 0,
+              "description": "The response status text that corresponds to the"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "Cookies": {
+      "title": "Cookies",
+      "type": "object",
+      "description": "Each key of this object is a cookie name,  and each value is the cookie's properties, including its value, its expiration date, etc.  Any part of a cookie can contain variables in double curly brackets (e.g. `{{Cookie_Name}}`)",
+      "patternProperties": {
+        ".+": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Cookies/definitions/CookieString"
+            },
+            {
+              "$ref": "#/definitions/Cookies/definitions/CookieObject"
+            }
+          ]
+        },
+        "^_": {
+          "$ref": "#/definitions/Types/definitions/AnyType"
+        }
+      },
+      "additionalProperties": false,
+      "definitions": {
+        "CookieString": {
+          "type": "string",
+          "minLength": 0,
+          "description": "This is a shorthand notation for setting a cookie's value and accepting the default values for all other properties (as defined by RFC 6265)"
+        },
+        "CookieObject": {
+          "type": "object",
+          "required": [
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "string",
+              "minLength": 0,
+              "description": "The value that is stored in the cookie"
+            },
+            "domain": {
+              "type": "string",
+              "minLength": 0,
+              "description": "The domain (or subdomain) to which the cookie applies"
+            },
+            "path": {
+              "type": "string",
+              "minLength": 0,
+              "description": "The path to which the cookie applies"
+            },
+            "secure": {
+              "type": "boolean",
+              "description": "Directs browsers to only transmit the cookie over secure/encrypted connections"
+            },
+            "httpOnly": {
+              "type": "boolean",
+              "description": "Directs browsers to only expose the cookie through HTTP (and HTTPS) requests. Cookies with this attribute are not accessible via non-HTTP methods, such as JavaScript (using `document.cookie`), and therefore cannot be easily stolen via cross-site scripting"
+            },
+            "expires": {
+              "$ref": "#/definitions/Types/definitions/Date",
+              "description": "The date that the cookie expires. We recommend that you use ISO-8601 format (e.g. `2015-11-26T00:16:38.000Z`).  Postman will automatically convert it to RFC 1123 format (e.g. `Sun, 26 Nov 2015 00:16:38 GMT`)"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "Types": {
+      "title": "Data Types",
+      "description": "Various data types that are reused throughouth the schema",
+      "type": "null",
+      "definitions": {
+        "Byte": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
         },
         "PositiveInteger": {
           "type": "integer",
@@ -443,17 +619,18 @@
           "minimum": 0,
           "default": 0
         },
-        "TypeName": {
-          "type": "string",
-          "enum": [
-            "array",
-            "boolean",
-            "integer",
-            "null",
-            "number",
-            "object",
-            "string"
-          ]
+        "Date": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "format": "date-time",
+          "properties": {
+            "n/a": {
+              "type": "null"
+            }
+          },
+          "additionalProperties": false
         },
         "StringArray": {
           "type": "array",
@@ -464,16 +641,56 @@
           "minItems": 1,
           "uniqueItems": true
         },
-        "Object": {
+        "ByteArray": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Types/definitions/Byte"
+          },
+          "minItems": 0
+        },
+        "Buffer": {
           "type": "object",
-          "patternProperties": {
-            ".*": {
-              "$ref": "#/definitions/JsonSchema"
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "Buffer"
+              ]
+            },
+            "data": {
+              "$ref": "#/definitions/Types/definitions/ByteArray"
             }
           },
-          "additionalProperties": {
-            "$ref": "#/definitions/JsonSchema"
+          "additionalProperties": false
+        },
+        "EncodedString": {
+          "description": "An encoded string (such as an HTTP request/response body). It can be expressed as a string, a byte array, or a Buffer object.",
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 0
+            },
+            {
+              "$ref": "#/definitions/Types/definitions/ByteArray"
+            },
+            {
+              "$ref": "#/definitions/Types/definitions/Buffer"
+            }
+          ]
+        },
+        "StringMap": {
+          "type": "object",
+          "description": "An object whose properties must be strings. If a property name begins with an underscore, then it is considered metadata, so it can be any type.",
+          "patternProperties": {
+            ".*": {
+              "type": "string",
+              "minLength": 0
+            },
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
           },
+          "additionalProperties": false,
           "default": {}
         },
         "AnyType": {
@@ -491,14 +708,293 @@
           "additionalProperties": true,
           "patternProperties": {
             ".*": {
-              "$ref": "#/definitions/JsonSchema/definitions/AnyType"
+              "$ref": "#/definitions/Types/definitions/AnyType"
             }
           },
           "items": {
-            "$ref": "#/definitions/JsonSchema/definitions/AnyType"
+            "$ref": "#/definitions/Types/definitions/AnyType"
           },
           "minItems": 0,
           "additionalItems": true
+        },
+        "JsonSchema": {
+          "title": "JSON Schema",
+          "description": "A full JSON Schema, which allows the user to define any data type, including primitives, objects, arrays, enumerations, etc.  They can also use \"allOf\", \"anyOf\", \"oneOf\", and \"not\" to create derived types, compound types, etc.",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uri",
+              "minLength": 0
+            },
+            "$schema": {
+              "type": "string",
+              "format": "uri",
+              "minLength": 0
+            },
+            "title": {
+              "type": "string",
+              "minLength": 0
+            },
+            "description": {
+              "type": "string",
+              "minLength": 0
+            },
+            "type": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/TypeName"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/TypeName"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "default": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            },
+            "minimum": {
+              "type": "number"
+            },
+            "maximum": {
+              "type": "number"
+            },
+            "exclusiveMinimum": {
+              "type": "boolean",
+              "default": false
+            },
+            "exclusiveMaximum": {
+              "type": "boolean",
+              "default": false
+            },
+            "multipleOf": {
+              "type": "number",
+              "minimum": 0,
+              "exclusiveMinimum": true
+            },
+            "maxLength": {
+              "$ref": "#/definitions/Types/definitions/PositiveInteger"
+            },
+            "minLength": {
+              "$ref": "#/definitions/Types/definitions/PositiveIntegerDefault0"
+            },
+            "pattern": {
+              "type": "string",
+              "format": "regex"
+            },
+            "enum": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Types/definitions/AnyType"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Types/definitions/JsonSchema"
+                },
+                {
+                  "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaArray"
+                }
+              ],
+              "default": {}
+            },
+            "additionalItems": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/Types/definitions/JsonSchema"
+                }
+              ],
+              "default": {}
+            },
+            "maxItems": {
+              "$ref": "#/definitions/Types/definitions/PositiveInteger"
+            },
+            "minItems": {
+              "$ref": "#/definitions/Types/definitions/PositiveIntegerDefault0"
+            },
+            "uniqueItems": {
+              "type": "boolean",
+              "default": false
+            },
+            "maxProperties": {
+              "$ref": "#/definitions/Types/definitions/PositiveInteger"
+            },
+            "minProperties": {
+              "$ref": "#/definitions/Types/definitions/PositiveIntegerDefault0"
+            },
+            "required": {
+              "$ref": "#/definitions/Types/definitions/StringArray"
+            },
+            "properties": {
+              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaMap"
+            },
+            "patternProperties": {
+              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaMap"
+            },
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/Types/definitions/JsonSchema"
+                }
+              ],
+              "default": {}
+            },
+            "definitions": {
+              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaMap"
+            },
+            "dependencies": {
+              "type": "object",
+              "patternProperties": {
+                ".*": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/definitions/Types/definitions/JsonSchema"
+                    },
+                    {
+                      "$ref": "#/definitions/Types/definitions/StringArray"
+                    }
+                  ]
+                }
+              }
+            },
+            "allOf": {
+              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaArray"
+            },
+            "anyOf": {
+              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaArray"
+            },
+            "oneOf": {
+              "$ref": "#/definitions/Types/definitions/JsonSchema/definitions/SchemaArray"
+            },
+            "not": {
+              "$ref": "#/definitions/Types/definitions/JsonSchema"
+            }
+          },
+          "patternProperties": {
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false,
+          "dependencies": {
+            "exclusiveMaximum": [
+              "maximum"
+            ],
+            "exclusiveMinimum": [
+              "minimum"
+            ]
+          },
+          "default": {},
+          "definitions": {
+            "SchemaArray": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/Types/definitions/JsonSchema"
+              }
+            },
+            "SchemaMap": {
+              "type": "object",
+              "patternProperties": {
+                ".*": {
+                  "$ref": "#/definitions/Types/definitions/JsonSchema"
+                }
+              },
+              "additionalProperties": {
+                "$ref": "#/definitions/Types/definitions/JsonSchema"
+              },
+              "default": {}
+            },
+            "TypeName": {
+              "type": "string",
+              "enum": [
+                "array",
+                "boolean",
+                "integer",
+                "null",
+                "number",
+                "object",
+                "string"
+              ]
+            }
+          }
+        },
+        "JsonReference": {
+          "type": "object",
+          "required": [
+            "$ref"
+          ],
+          "properties": {
+            "$ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "HttpMethod": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "GET",
+            "PUT",
+            "POST",
+            "PATCH",
+            "DELETE",
+            "COPY",
+            "HEAD",
+            "OPTIONS",
+            "LINK",
+            "UNLINK",
+            "PURGE",
+            "LOCK",
+            "UNLOCK",
+            "PROPFIND",
+            "VIEW"
+          ]
+        }
+      }
+    },
+    "Scripting": {
+      "title": "Scripting",
+      "description": "Postman Collections can contain JavaScript code that runs when certain events occur. Your scripts can also reference external dependencies, such as Node modules, Bower packages, jQuery plug-ins, etc.",
+      "type": "null",
+      "definitions": {
+        "EventHandler": {
+          "$ref": "#/definitions/Scripting/definitions/Script",
+          "description": "Event handlers are a special type of script that responds to a specific event.  Whereas normal scripts are meant to be reusable and general-purpose, event handlers are meant to be written for a specific event and request. At some point in the future, event handlers may be able to accept parameters and return results."
+        },
+        "Scripts": {
+          "type": "object",
+          "description": "These top-level scripts are accessible to all other scripts in the collection.\nThis is a great place to define classes, utility functions, global objects, and\nother general-purpose, reusable code.\n\nScripts that return a value, or which contain AMD or CommonJS modules, will be exported\nas global variables with the same name as the script.",
+          "patternProperties": {
+            "^\\w+": {
+              "$ref": "#/definitions/Scripting/definitions/Script"
+            },
+            "^_": {
+              "$ref": "#/definitions/Types/definitions/AnyType"
+            }
+          },
+          "additionalProperties": false
+        },
+        "Script": {
+          "type": "string",
+          "minLength": 0,
+          "description": "A script is just a string containing JavaScript code, but because Postman Collection Format\nis built on top of JSON Schema, you can take advantage of the `$ref` keyword to reference\nexternal JavaScript files and URLs.\n\nScripts can export values (such as classes, functions, objects, etc.) in several different ways:\n\n- Modules:\n  Postman supports AMD and CommonJS module formats. The module exports will be available to\n  your scripts as a global variable.  The variable name is the same as the key on the `Scripts` object.\n\n- Return values:\n  If the script returns a value, then that value is treated exactly like a module export\n  as described above.\n\n- Globals:\n  Scripts can defien global variables directly by assigning properties to the `window` or `global`\n  objects. (e.g. `window.myVar = \"hello world\"`)"
         }
       }
     }

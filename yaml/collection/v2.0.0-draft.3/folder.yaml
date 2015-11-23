@@ -22,5 +22,5 @@ properties:
 
 patternProperties:
   "^_":
-    $ref: json-schema.yaml#/definitions/AnyType
+    $ref: types.yaml#/definitions/AnyType
 additionalProperties: false

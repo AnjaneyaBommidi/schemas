@@ -1,0 +1,164 @@
+title: Security
+description: >-
+  Defines the supported security schemas for a resource, method, or for your entire API.
+
+  The `security` property at the top level of the schema may be used to apply security schemes
+  to every method of the API. This specifies that all methods in the API (unless they have their
+  own `security` property) can be authenticated by any of the supported security schemes.
+
+  The `security` property on a resource or method overrides any security schemes that are defined
+  at a higher level.
+
+oneOf:
+  - $ref: "#/definitions/SecurityScheme"
+  - $ref: "#/definitions/SecuritySchemeMap"
+
+definitions:
+  SecurityScheme:
+    oneOf:
+      - $ref: "#/definitions/BasicAuth"
+      - $ref: "#/definitions/DigestAuth"
+      - $ref: "#/definitions/TokenAuth"
+      - $ref: "#/definitions/OAuth1"
+      - $ref: "#/definitions/OAuth2"
+
+  SecuritySchemeMap:
+    type: object
+    description: >-
+      An object whose properties must be strings.
+      If a property name begins with an underscore, then it is considered metadata, so it can be any type.
+    patternProperties:
+      ".*":
+        $ref: "#/definitions/SecurityScheme"
+      "^_":
+        $ref: ../types.yaml#/definitions/AnyType
+    additionalProperties: false
+    default: {}
+
+  BasicAuth:
+    type: object
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        enum: [basic]
+      description:
+        $ref: ../types.yaml#/definitions/Description
+    patternProperties:
+      "^_":
+        $ref: ../types.yaml#/definitions/AnyType
+    additionalProperties: false
+
+  DigestAuth:
+    type: object
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        enum: [digest]
+      description:
+        $ref: ../types.yaml#/definitions/Description
+    patternProperties:
+      "^_":
+        $ref: ../types.yaml#/definitions/AnyType
+    additionalProperties: false
+
+  TokenAuth:
+    type: object
+    required:
+      - type
+      - name
+    properties:
+      type:
+        type: string
+        enum: [token]
+      description:
+        $ref: ../types.yaml#/definitions/Description
+      name:
+        type: string
+        minLength: 1
+        description: The token name (e.g. the name of the header, cookie, query param, etc.)
+      location:
+        type: string
+        enum: [path, query, header, cookie, body]
+        description: The location of the token in the HTTP request
+    patternProperties:
+      "^_":
+        $ref: ../types.yaml#/definitions/AnyType
+    additionalProperties: false
+
+  OAuth1:
+    type: object
+    required:
+      - type
+      - requestTokenUrl
+      - authorizationUrl
+      - tokenCredentialsUrl
+    properties:
+      type:
+        type: string
+        enum: [oauth1]
+      description:
+        $ref: ../types.yaml#/definitions/Description
+      requestTokenUrl:
+        type: string
+        format: uri
+        minLength: 1
+      authorizationUrl:
+        type: string
+        format: uri
+        minLength: 1
+      tokenCredentialsUrl:
+        type: string
+        format: uri
+        minLength: 1
+    patternProperties:
+      "^_":
+        $ref: ../types.yaml#/definitions/AnyType
+    additionalProperties: false
+
+  OAuth2:
+    type: object
+    required:
+      - type
+      - accessTokenUrl
+      - authorizationUrl
+      - authorizationGrants
+      - scopes
+    properties:
+      type:
+        type: string
+        enum: [oauth2]
+      description:
+        $ref: ../types.yaml#/definitions/Description
+      accessTokenUrl:
+        type: string
+        format: uri
+        minLength: 1
+      authorizationUrl:
+        type: string
+        format: uri
+        minLength: 1
+      authorizationGrants:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          type: string
+          enum:
+            - implicit
+            - password
+            - clientcredentials
+            - authorizationcode
+            - refreshtoken
+      scopes:
+        $ref: ../types.yaml#/definitions/StringMap
+        description: >-
+          Each property name defines an OAuth2 scope, and the value is a description of the scope.
+          The description supports markdown syntax to better format the description.
+    patternProperties:
+      "^_":
+        $ref: ../types.yaml#/definitions/AnyType
+    additionalProperties: false

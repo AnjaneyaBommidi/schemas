@@ -22,11 +22,12 @@ properties:
     $ref: cookies.yaml
     description: A structured version of the "Set-Cookie" response header
   body:
-    $ref: ../types.yaml#/definitions/EncodedString
+    $ref: ../types.yaml#/definitions/EncodedStringOrJson
     description: >-
       The response body (if any) will be encoded ASCII text. This can include plain text, HTML,
-      JSON, XML, or even encoded binary data (such as an image, audio file, etc.).
+      XML, or even encoded binary data (such as an image, audio file, etc.).
       The `Content-Type` and `Content-Encoding` headers determine the content type and the encoding.
+      If the response body is JSON, then it can be specified as an object instead of a string.
 patternProperties:
   "^_":
     $ref: ../types.yaml#/definitions/AnyType

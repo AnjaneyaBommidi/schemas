@@ -8,7 +8,7 @@ definitions:
   VersionString:
     type: string
     minLength: 1
-    pattern: \d+(\.\d+){0,2}(-.*)   # Question: Do we really want to only allow SemVer?
+    pattern: \d+(\.\d+){0,2}(-.*)?
     description: A Semantic Versioniing (http://semver.org/) string
 
   VersionObject:

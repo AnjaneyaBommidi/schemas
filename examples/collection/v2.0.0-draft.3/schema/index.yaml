@@ -1,7 +1,7 @@
-postman: 2.0
+postman: '2.0'
 info:
   name: My Favorite Things
-  version: 1.0.0-alpha.1
+  version: 4.0.2-patch.6
   author:
     name: John Doe
     url: http://www.myfavoritethings.com
@@ -10,11 +10,177 @@ info:
     Whether it's your favorite sports teams,
     your favorite holidays, or even your favorite colors.
 
-requests:
-  - request:
-      method: GET
-      url: http://www.foo.bar
-      responses:
-        - response:
-            status:
-              code: 200
+schema:
+  # This defines the security schemes that are supported by this API.
+  security:
+    BasicAuth:
+      type: basic
+      description: HTTP Basic Auth
+    Token:
+      type: token
+      name: JWT_TOKEN
+      location: header
+      description: An API token in HTTP header
+    Facebook_Auth:
+      type: oauth2
+      accessTokenUrl: http://www.facebook.com/oauth/token
+      authorizationUrl: http://www.facebook.com/oauth/login
+      authorizationGrants:
+        - refreshtoken
+        - authorizationcode
+      scopes:
+        "profile:read": We require read-only access to your Facebook profile
+        "friends:read": We need your friends list, so we know who your favorite people are!
+
+  # This defines the REST Resources for this API
+  resources:
+    # REST Resource #1
+    - name: View/Add Favorites
+      description: All of your favorite things
+      path: /favorites
+      security:
+        $ref: "#/schema/security/Token"                         # <-- This resource only allows Token auth
+
+      # GET /favorites
+      get:
+        name: View your favoirtes
+        description: Returns all of your favorite things
+        deprecated:
+          asOf: 2.5.0
+          reason: Please use the new "/favorites/{{category}}" endpoint instead
+        responses:
+          200:
+            body:
+              type: array                                       # <-- Returns an array of "Favorite" objects
+              items:
+                $ref: "#/schema/definitions/Favorite"
+
+    # REST Resource #2
+    - name: Favorites by category
+      path:                                                     # <-- Or we could define the path as a string: /favorites/{{category}}
+        - favorites                                             #
+        - title: category                                       #
+          type: string                                          #     but by defining each segment instead,
+          enum: [people, colors, holidays]                      # <-- we can add restrictions like this
+
+      # GET /favorites/{{category}}
+      get:
+        security:
+          $ref: "#/schema/security/Facebook_Auth"               # <-- This method only allows Facebook auth
+        headers:
+          Accept:
+            type: string
+            enum:                                               # <-- The client can request any of these response formats
+              - text/html
+              - application/json
+              - application/xml
+            default: text/html
+        responses:
+          200:
+            headers:
+              Content-Type:
+                type: string
+                enum:                                           # <-- The possible response formats
+                  - text/html
+                  - application/json
+                  - application/xml
+            body:
+              oneOf:                                            # <-- The possible response types
+                - type: array
+                  items:
+                    $ref: "#/schema/definitions/Favorite"
+                - type: string
+                  description: (HTML response)
+
+      # POST /favorites/{{category}}
+      post:
+        description: Add a new favorite to the given category
+        cookies:
+          S_ID:                                                 # <-- Session cookie
+            type: integer
+            minimum: 1
+        body:
+          $ref: "#/schema/definitions/Favorite"                 # <-- The request body should validate against this schema
+        responses:
+          201:
+            headers:
+              Location:                                         # <-- The "Location" response header will contain the new Resource URL
+                type: string
+          403:
+            name: Forbidden
+            description: You aren't allowed to add new favorites!
+            body:
+              type: object                                      # <-- Response schemas can be defined in-line
+              properties:                                       #     (though it usually makes more sense to use global definitions instead)
+                code:
+                  type: string
+                message:
+                  type: string
+
+        # Each Request Schema can include example requests/responses.
+        examples:
+          # Example Request #1
+          - name: Add your favorite color
+            description: >-
+              This example shows how to add the color "Blue" to your list of favorite colors.
+              Note that we're sending a session cookie ("S_ID").  The request would fail otherwise.
+            method: POST
+            url: "{{Server}}:{{Port_Number}}/favorites/colors"
+            headers:
+              S_ID: '12345'   # <-- fake session ID
+            body:
+              mode: raw
+              content:
+                category: colors
+                name: Blue
+                reason: Because it's the best color ever!
+            responses:
+              - description: >-
+                  If all went well, you should receive a 201 (Created) response.
+                  The "Location" HTTP header should be the URL of the newly-created favorite
+                status:
+                  code: 201
+                  text: Created
+                headers:
+                  Location: "{{Server}}:{{Port_Number}}/favorites/colors/blue"
+
+          # Example Request #2
+          - name: Try to add a color without a session ID
+            description: >-
+              This example shows what happens if you fail to send the session cookie ("S_ID")
+              when trying to add a favoirte.
+            method: POST
+            url: "{{Server}}:{{Port_Number}}/favorites/colors"
+            body:
+              mode: raw
+              content:
+                category: colors
+                name: Blue
+                reason: Because it's the best color ever!
+            responses:
+              - status:
+                  code: 403
+                  text: Forbidden
+                body:
+                  code: E_FORBIDDEN
+                  message: You are not allowed to perform the requested operation
+
+  definitions:
+    Favorite:
+      description: Represents one of your favorite things!
+      type: object
+      required:
+        - category
+        - name
+      properties:
+        category:
+          type: string
+          enum: [people, colors, holidays]
+        name:
+          type: string
+          minLength: 1
+        reason:
+          type: string
+        favoritedOn:
+          type: string
+          format: date

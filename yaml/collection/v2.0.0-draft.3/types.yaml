@@ -2,6 +2,16 @@ title: Data Types
 description: Various data types that are used throughout the Postman Collection Format
 type: "null"
 definitions:
+  Name:
+    type: string
+    minLength: 1
+    description: A short, friendly name
+
+  Description:
+    type: string
+    minLength: 0
+    description: A detailed description.  This field supports markdown syntax to better format the description.
+
   Byte:
     type: integer
     minimum: 0
@@ -40,6 +50,13 @@ definitions:
       $ref: "#/definitions/Byte"
     minItems: 0
 
+  Object:
+    type: object
+    patternProperties:
+      ".*":
+        $ref: "#/definitions/AnyType"
+    additionalProperties: true
+
   Buffer:
     type: object
     properties:
@@ -59,6 +76,11 @@ definitions:
         minLength: 0
       - $ref: "#/definitions/ByteArray"
       - $ref: "#/definitions/Buffer"
+
+  EncodedStringOrJson:
+    oneOf:
+      - $ref: "#/definitions/EncodedString"
+      - $ref: "#/definitions/Object"
 
   StringMap:
     type: object
@@ -90,23 +112,3 @@ definitions:
       $ref: "#/definitions/AnyType"
     minItems: 0
     additionalItems: true
-
-  HttpMethod:
-    type: string
-    minLength: 1
-    enum:
-      - GET
-      - PUT
-      - POST
-      - PATCH
-      - DELETE
-      - COPY
-      - HEAD
-      - OPTIONS
-      - LINK
-      - UNLINK
-      - PURGE
-      - LOCK
-      - UNLOCK
-      - PROPFIND
-      - VIEW

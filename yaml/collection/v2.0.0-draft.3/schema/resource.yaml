@@ -1,0 +1,104 @@
+title: REST Resource
+description: Represents a REST Resource, which is uniquely identified by its path.
+type: object
+required:
+  - path
+properties:
+  name:
+    $ref: ../types.yaml#/definitions/Name
+  description:
+    $ref: ../types.yaml#/definitions/Description
+  path:
+    $ref: "#/definitions/ResourcePath"
+  security:
+    $ref: security.yaml
+  get:
+    $ref: request-schema.yaml
+    description: Defines the schema for GET requests to thsi REST resource
+  put:
+    $ref: request-schema.yaml
+    description: Defines the schema for PUT requests to thsi REST resource
+  post:
+    $ref: request-schema.yaml
+    description: Defines the schema for POST requests to thsi REST resource
+  patch:
+    $ref: request-schema.yaml
+    description: Defines the schema for PATCH requests to thsi REST resource
+  delete:
+    $ref: request-schema.yaml
+    description: Defines the schema for DELETE requests to thsi REST resource
+  copy:
+    $ref: request-schema.yaml
+    description: Defines the schema for COPY requests to thsi REST resource
+  head:
+    $ref: request-schema.yaml
+    description: Defines the schema for HEAD requests to thsi REST resource
+  options:
+    $ref: request-schema.yaml
+    description: Defines the schema for OPTIONS requests to thsi REST resource
+  link:
+    $ref: request-schema.yaml
+    description: Defines the schema for LINK requests to thsi REST resource
+  unlink:
+    $ref: request-schema.yaml
+    description: Defines the schema for UNLINK requests to thsi REST resource
+  purge:
+    $ref: request-schema.yaml
+    description: Defines the schema for PURGE requests to thsi REST resource
+  lock:
+    $ref: request-schema.yaml
+    description: Defines the schema for LOCK requests to thsi REST resource
+  unlock:
+    $ref: request-schema.yaml
+    description: Defines the schema for UNLOCK requests to thsi REST resource
+  propfind:
+    $ref: request-schema.yaml
+    description: Defines the schema for PROPFIND requests to thsi REST resource
+  view:
+    $ref: request-schema.yaml
+    description: Defines the schema for VIEW requests to thsi REST resource
+
+patternProperties:
+  "^_":
+    $ref: ../types.yaml#/definitions/AnyType
+additionalProperties: false
+
+definitions:
+  ResourcePath:
+    description: >-
+      The resource path can be specified as a string or as an array of path segments.
+      Either format allows the path to contain parameters, but only the array allows you to specify
+      the JSON Schema for the parameters.
+    oneOf:
+      - $ref: "#/definitions/ResourcePathString"
+      - $ref: "#/definitions/ResourcePathSegments"
+
+  ResourcePathString:
+    type: string
+    minLength: 1
+    description: >-
+      Specifies the REST Resource's path as a string.  The string can contain parameters in double
+      curly brackets (e.g. `/products/{{category}}/{{product_id}}/details`).  Postman will treat each
+      parameter as a string.
+
+  ResourcePathSegments:
+    type: array
+    minItems: 1
+    items:
+      oneOf:
+        - $ref: "#/definitions/ResourcePathSegment"
+        - $ref: "#/definitions/ResourcePathParameter"
+
+  ResourcePathSegment:
+    type: string
+    minLength: 1
+    description: >-
+      A fixed path segment (i.e. not a parameter).  For example, in the path
+      `/products/{{category}}/{{product_id}}/details`, there are two string segments:
+      "products" and "details".
+
+  ResourcePathParameter:
+    $ref: json-schema.yaml
+    description: >-
+      A parameter segment.  For example, in the path `/products/{{category}}/{{product_id}}/details`,
+      there are two parameter segments named "category" and "product_id".

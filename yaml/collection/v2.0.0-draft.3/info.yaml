@@ -5,15 +5,13 @@ required:
   - name
 properties:
   name:
-    type: string
-    minLength: 1
+    $ref: types.yaml#/definitions/Name
     description: >-
       A collection's friendly name is defined by this field.
       You would want to set this field to a value that would allow you to easily identify this
       collection among a bunch of other collections, as such outlining its usage or content.
   description:
-    type: string
-    minLength: 0
+    $ref: types.yaml#/definitions/Description
     description: >-
       Provide a long description of this collection using this field.
       This field supports markdown syntax to better format the description.

@@ -20,7 +20,9 @@ properties:
       in double curly brackets anywhere in the URL string
       (e.g. `{{protocol}}://{{server_name}}:{{port_number}}/api/{{version_number}}/users?username={{user_name}}`).
   method:
-    $ref: ../types.yaml#/definitions/HttpMethod
+    type: string
+    minLength: 1
+    enum: [GET, PUT, POST, PATCH, DELETE, COPY, HEAD, OPTIONS, LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND, VIEW]
     description: The HTTP method associated with this request
   headers:
     $ref: ../types.yaml#/definitions/StringMap
@@ -114,18 +116,11 @@ definitions:
         type: string
         enum: [raw]
       content:
-        type:
-          - string
-          - object
+        $ref: ../types.yaml#/definitions/EncodedStringOrJson
         description: >
           This will be a string for most content types (plain text, HTML, CSV, XML, etc.),
           but for JSON content, you may specify an object, which will be serialized as JSON when
           the request is sent.
-        minLength: 0
-        patternProperties:
-          ".*":
-            $ref: ../types.yaml#/definitions/AnyType
-        additionalProperties: true
     patternProperties:
       "^_":
         $ref: ../types.yaml#/definitions/AnyType

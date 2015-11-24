@@ -1,0 +1,19 @@
+title: Response Schema
+description: Defines the schema for an HTTP response.
+type: object
+properties:
+  name:
+    $ref: ../types.yaml#/definitions/Name
+  description:
+    $ref: ../types.yaml#/definitions/Description
+  headers:
+    $ref: json-schema.yaml#/definitions/JsonSchemaMap
+  cookies:
+    $ref: json-schema.yaml#/definitions/JsonSchemaMap
+  body:
+    $ref: json-schema.yaml
+
+patternProperties:
+  "^_":
+    $ref: ../types.yaml#/definitions/AnyType
+additionalProperties: false

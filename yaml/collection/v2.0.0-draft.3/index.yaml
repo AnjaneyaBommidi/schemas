@@ -6,16 +6,15 @@ required:
   - info
 properties:
   postman:
-    type: number
-    minimum: 2.0
-    maximum: 2.0
+    type: string
+    enum: ["2.0"]
     description: The Postman Collection Format version
   info:
     $ref: "#/definitions/Info"
   variables:
     $ref: "#/definitions/Variables"
-#  schema:
-#    $ref: "#/definitions/Schema"
+  schema:
+    $ref: "#/definitions/Schema"
   requests:
     $ref: "#/definitions/Items"
   examples:
@@ -37,12 +36,10 @@ definitions:
     $ref: version.yaml
   Variables:
     $ref: variables.yaml
-#  Schema:
-#    $ref: schema/schema.yaml
+  Schema:
+    $ref: schema/schema.yaml
   Folder:
     $ref: folders/folder.yaml
-  Items:
-    $ref: folders/items.yaml
   Items:
     $ref: folders/items.yaml
   Request:

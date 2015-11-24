@@ -1,0 +1,73 @@
+title: Request Schema
+description: Defines the Schema for this REST method
+type: object
+properties:
+  name:
+    $ref: ../types.yaml#/definitions/Name
+  description:
+    $ref: ../types.yaml#/definitions/Description
+  security:
+    $ref: security.yaml
+  since:
+    $ref: ../version.yaml
+    description: The API version in which this method was introduced
+  deprecated:
+    $ref: "#/definitions/DeprecationInfo"
+  headers:
+    $ref: json-schema.yaml#/definitions/JsonSchemaMap
+  cookies:
+    $ref: json-schema.yaml#/definitions/JsonSchemaMap
+  body:
+    $ref: json-schema.yaml
+  responses:
+    $ref: "#/definitions/ResponseSchemaMap"
+  examples:
+    $ref: ../folders/items.yaml
+    description: >-
+      This folder is for you to provide example requests/responses for documentation purposes.
+      You can include as many examples as you want, and even group them using sub-folders.
+  tests:
+    $ref: ../folders/items.yaml
+    description: >-
+      This folder is for you to test this REST method.  You can include as many tests as you want,
+      and even group them using sub-folders.
+
+patternProperties:
+  "^_":
+    $ref: ../types.yaml#/definitions/AnyType
+additionalProperties: false
+
+definitions:
+  DeprecationInfo:
+    description: >-
+      Indicates that this REST method is deprecated.  This can be specified as either a boolean or an object.
+    oneOf:
+      - type: boolean
+      - type: object
+        required:
+          - asOf
+        properties:
+          asOf:
+            $ref: ../version.yaml
+            description: The API version in which this method became deprecated
+          reason:
+            type: string
+            minLength: 0
+            description: >-
+              Information about why the method was deprecated, and perhaps guidance on the new preferred approach.
+        patternProperties:
+          "^_":
+            $ref: ../types.yaml#/definitions/AnyType
+        additionalProperties: false
+
+  ResponseSchemaMap:
+    description: >-
+      Defines the response schemas for this REST method.  You can have a different schema
+      for each HTTP response code (e.g. 200, 201, 404, 500, etc.)
+    type: object
+    patternProperties:
+      "^\\d{3}$":
+        $ref: response-schema.yaml
+      "^_":
+        $ref: ../types.yaml#/definitions/AnyType
+    additionalProperties: false
